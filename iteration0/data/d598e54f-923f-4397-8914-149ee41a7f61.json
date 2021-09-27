@@ -1,9 +1,0 @@
-{
-  "id": "",
-  "title": "Promises in Node.js: An alternative to callbacks",
-  "url": "http://developer.ibm.com/languages/node-js/articles/promises-in-nodejs-an-alternative-to-callbacks/",
-  "keywords": ["JavaScript", "Nodejs", "Callback", "Promise"],
-  "modifiedAt": "06/20/2019",
-  "publishedAt": "06/20/2022",
-  "author": "Marc Harter at IBM Developer"
-}
