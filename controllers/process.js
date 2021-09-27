@@ -1,11 +1,3 @@
-/*
-
-  Iteration #2: Writing files
-
-  Extend the implementation of iteration #1 to centralize successfully validated articles in a database in files.
-
-*/
-
 const fs = require("fs");
 const v = require("../modules/validation");
 const util = require("util");
