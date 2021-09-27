@@ -7,6 +7,8 @@ const middlewarePatch = require("../modules/middlewarePatch");
 const mongoClient = require("../helpers/mongoClient");
 const { aSchemaPost, aSchemaPatch } = require("../modules/schemaValidation");
 const Author = require("../modules/author");
+const auth = require("../modules/auth");
+
 articlesdb.get("/", async (req, res) => {
   const articlesCol = await mongoClient.client
     .db(process.env.DB_NAME)
@@ -15,6 +17,7 @@ articlesdb.get("/", async (req, res) => {
     .toArray();
   res.status(200).json(articlesCol);
 });
+
 articlesdb.get("/:id", async (req, res) => {
   const idParam = req.params.id;
   try {
@@ -31,7 +34,8 @@ articlesdb.get("/:id", async (req, res) => {
       .json({ message: `There is no document with id ${idParam}` });
   }
 });
-articlesdb.post("/", middlewarePost(aSchemaPost), async (req, res) => {
+
+articlesdb.post("/", auth, middlewarePost(aSchemaPost), async (req, res) => {
   const articlePost = req.body;
   const errMessages = await v.articleValidation(articlePost, "from Postman");
   if (errMessages == "") {
@@ -59,94 +63,109 @@ articlesdb.post("/", middlewarePost(aSchemaPost), async (req, res) => {
     res.status(400).json({ messages: errMessages });
   }
 });
-articlesdb.patch("/:id", middlewarePatch(aSchemaPatch), async (req, res) => {
-  const idParam = req.params.id;
-  const reqBody = req.body;
-  try {
-    await mongoClient.client
-      .db(process.env.DB_NAME)
-      .collection("articles")
-      .updateOne(
-        { _id: ObjectId(idParam) },
-        {
-          $set: reqBody,
-        }
-      )
-      .then((result) => {
-        if (result.result.n) {
-          return res
-            .status(200)
-            .json({ message: `Document with id ${idParam} was updated` });
-        }
-        return res
-          .status(404)
-          .json({ message: `Could not find document with id ${idParam}` });
-      });
-  } catch (err) {
-    console.error(err);
-  }
-});
-articlesdb.put("/:id", middlewarePatch(aSchemaPatch), async (req, res) => {
-  const idParam = req.params.id;
-  const reqBody = req.body;
-  let idNew;
-  let docCountBefore;
-  let docCountAfter;
-  try {
-    docCountBefore = await mongoClient.client
-      .db(process.env.DB_NAME)
-      .collection("articles")
-      .countDocuments();
-    docCountBefore = parseInt(docCountBefore);
-    await mongoClient.client
-      .db(process.env.DB_NAME)
-      .collection("articles")
-      .updateOne(
-        { _id: ObjectId(idParam) },
-        {
-          $set: reqBody,
-        },
-        {
-          upsert: true,
-        }
-      );
-    docCountAfter = await mongoClient.client
-      .db(process.env.DB_NAME)
-      .collection("articles")
-      .countDocuments();
-    docCountAfter = parseInt(docCountAfter);
-    if (docCountBefore < docCountAfter) {
-      idNew = await mongoClient.client
+
+articlesdb.patch(
+  "/:id",
+  auth,
+  middlewarePatch(aSchemaPatch),
+  async (req, res) => {
+    const idParam = req.params.id;
+    const reqBody = req.body;
+    try {
+      await mongoClient.client
         .db(process.env.DB_NAME)
         .collection("articles")
-        .find({}, { _id: 1 })
-        .sort({ $natural: -1 })
-        .limit(1)
-        .toArray();
-      idNew = idNew[0]._id;
-      Author.updateOne(
-        { _id: req.body.author },
-        { $addToSet: { articles: idNew } }
-      )
-        .then(() => {
-          return res.status(200).json({
-            message: `Document with id ${idParam} was successfully added`,
-          });
-        })
-        .catch((err) => {
-          console.error(err);
+        .updateOne(
+          { _id: ObjectId(idParam) },
+          {
+            $set: reqBody,
+          }
+        )
+        .then((result) => {
+          if (result.result.n) {
+            return res
+              .status(200)
+              .json({ message: `Document with id ${idParam} was updated` });
+          }
+          return res
+            .status(404)
+            .json({ message: `Could not find document with id ${idParam}` });
         });
-    } else {
-      return res.status(200).json({
-        message: `Document with id ${idParam} was successfully updated`,
-      });
+    } catch (err) {
+      console.error(err);
     }
-  } catch (err) {
-    console.error(err);
-    return res.status(404).json({ message: `The id ${idParam} is not valid` });
   }
-});
-articlesdb.delete("/:id", async (req, res) => {
+);
+
+articlesdb.put(
+  "/:id",
+  auth,
+  middlewarePatch(aSchemaPatch),
+  async (req, res) => {
+    const idParam = req.params.id;
+    const reqBody = req.body;
+    let idNew;
+    let docCountBefore;
+    let docCountAfter;
+    try {
+      docCountBefore = await mongoClient.client
+        .db(process.env.DB_NAME)
+        .collection("articles")
+        .countDocuments();
+      docCountBefore = parseInt(docCountBefore);
+      await mongoClient.client
+        .db(process.env.DB_NAME)
+        .collection("articles")
+        .updateOne(
+          { _id: ObjectId(idParam) },
+          {
+            $set: reqBody,
+          },
+          {
+            upsert: true,
+          }
+        );
+      docCountAfter = await mongoClient.client
+        .db(process.env.DB_NAME)
+        .collection("articles")
+        .countDocuments();
+      docCountAfter = parseInt(docCountAfter);
+      if (docCountBefore < docCountAfter) {
+        idNew = await mongoClient.client
+          .db(process.env.DB_NAME)
+          .collection("articles")
+          .find({}, { _id: 1 })
+          .sort({ $natural: -1 })
+          .limit(1)
+          .toArray();
+        idNew = idNew[0]._id;
+        Author.updateOne(
+          { _id: req.body.author },
+          { $addToSet: { articles: idNew } }
+        )
+          .then(() => {
+            return res.status(200).json({
+              message: `Document with id ${idParam} was successfully added`,
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      } else {
+        return res.status(200).json({
+          message: `Document with id ${idParam} was successfully updated`,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      return res
+        .status(404)
+        .json({ message: `The id ${idParam} is not valid` });
+    }
+  }
+);
+
+articlesdb.delete("/:id", auth, async (req, res) => {
   const idParam = req.params.id;
   try {
     let authorId = await mongoClient.client
@@ -177,4 +196,5 @@ articlesdb.delete("/:id", async (req, res) => {
       .json({ message: `There is no document with id ${idParam}` });
   }
 });
+
 module.exports = articlesdb;

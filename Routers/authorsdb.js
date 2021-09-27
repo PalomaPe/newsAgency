@@ -7,6 +7,7 @@ const auth = require("../modules/auth");
 const { ObjectID, ObjectId } = require("bson");
 
 mongoose.Promise = global.Promise;
+
 authorsdb.get("/", (req, res) => {
   Author.find()
     .then((docs) => {
@@ -17,6 +18,7 @@ authorsdb.get("/", (req, res) => {
       res.status(500).json({ message: "Could not show documents" });
     });
 });
+
 authorsdb.get("/:id", async (req, res) => {
   const idParam = req.params.id;
   Author.findOne({ _id: idParam })
@@ -32,7 +34,8 @@ authorsdb.get("/:id", async (req, res) => {
       console.log(err);
     });
 });
-authorsdb.post("/", async (req, res) => {
+
+authorsdb.post("/", auth, async (req, res) => {
   const author = req.body;
   Author.create(author)
     .then(() => {
@@ -43,13 +46,15 @@ authorsdb.post("/", async (req, res) => {
       res.status(404).json({ message: "Could not post in database" });
     });
 });
-authorsdb.put("/:id", async (req, res) => {
+
+authorsdb.put("/:id", auth, async (req, res) => {
   const idParam = req.params.id;
   Author.updateOne({ _id: idParam }, req.body, {
     currentDate: { lastModified: true },
     upsert: true,
   })
     .then((results) => {
+      console.log(results);
       if (results.nModified) {
         return res.status(200).json({
           message: `Document with id ${idParam} was updated`,
@@ -66,7 +71,8 @@ authorsdb.put("/:id", async (req, res) => {
         .send({ message: `Could not update document with id ${idParam}` });
     });
 });
-authorsdb.patch("/:id", async (req, res) => {
+
+authorsdb.patch("/:id", auth, async (req, res) => {
   res.setHeader("Content-Type", "application/json");
   const idParam = req.params.id;
   Author.updateOne({ _id: idParam }, req.body)
@@ -84,7 +90,8 @@ authorsdb.patch("/:id", async (req, res) => {
       console.error(err);
     });
 });
-authorsdb.delete("/:id", async (req, res) => {
+
+authorsdb.delete("/:id", auth, async (req, res) => {
   const idParam = req.params.id;
   Author.find({ _id: idParam })
     .then((result) => {
@@ -114,4 +121,5 @@ authorsdb.delete("/:id", async (req, res) => {
         .json({ message: `Could not find a document with id ${idParam}` });
     });
 });
+
 module.exports = authorsdb;
