@@ -1,6 +1,9 @@
 /*
-  Iteración #2: Escribiendo en archivos
-  Extender la implementación de la iteración #1 para centralizar los artículos validados correctamente en una base de datos en archivos.
+
+  Iteration #2: Writing files
+
+  Extend the implementation of iteration #1 to centralize successfully validated articles in a database in files.
+
 */
 
 const fs = require("fs");

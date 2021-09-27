@@ -6,7 +6,7 @@
   "scripts": {
     "process": "node controllers/process.js",
     "start": "node server.js",
-    "iteration6": "node app.js",
+    "iteration7": "node appdb.js",
     "lint": "eslint ."
   },
   "author": "Paloma Peirano",

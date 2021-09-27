@@ -6,44 +6,15 @@ const writeFile = util.promisify(fs.writeFile);
 const path = require("path");
 
 async function appendToDB(article) {
-  let jsonArticles = {};
+  let parsedData;
   try {
     const dbdir = path.join(path.dirname(__filename), "../db.json");
-    jsonArticles.valids = [];
-    jsonArticles.valids.push(article);
-    fs.appendFileSync("./db.json", "");
     await readFile(dbdir).then((data) => {
-      let dataString = data.toString();
-      if (dataString != "") {
-        let oldValids = JSON.parse(dataString);
-        jsonArticles.valids = jsonArticles.valids.concat(oldValids.valids);
-      }
-      jsonArticles = JSON.stringify(jsonArticles);
+      parsedData = JSON.parse(data).valids;
+      parsedData.push(article);
+      parsedData = JSON.stringify(parsedData);
     });
-    return writeFile(dbdir, jsonArticles);
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function appendToInvalids(article) {
-  let jsonArticles = {};
-  try {
-    const invdir = path.join(path.dirname(__filename), "../invalids.json");
-    jsonArticles.invalids = [];
-    jsonArticles.invalids.push(article);
-    fs.appendFileSync("./invalids.json", "");
-    await readFile(invdir).then((data) => {
-      let dataString = data.toString();
-      if (dataString != "") {
-        let oldValids = JSON.parse(dataString);
-        jsonArticles.invalids = jsonArticles.invalids.concat(
-          oldValids.invalids
-        );
-      }
-      jsonArticles = JSON.stringify(jsonArticles);
-    });
-    return writeFile(invdir, jsonArticles);
+    return writeFile(dbdir, parsedData);
   } catch (err) {
     console.log(err);
   }
@@ -51,5 +22,4 @@ async function appendToInvalids(article) {
 
 module.exports = {
   appendToDB,
-  appendToInvalids,
 };
