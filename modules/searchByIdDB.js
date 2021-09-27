@@ -1,6 +1,5 @@
-const fs = require('fs');
-const { promisify } = require('util');
-
+const fs = require("fs");
+const { promisify } = require("util");
 const readFile = promisify(fs.readFile);
 
 const id = new Object();
@@ -16,13 +15,16 @@ function splitURL(requestURL) {
 }
 
 async function search(requestURL) {
-  let articleID = null;
+  let articleID = "";
   splitURL(requestURL);
   try {
     if (id.valid) {
-      articleID = await readFile('./db.json');
-      articleID = JSON.parse(articleID).valids;
-      articleID = articleID.find((item) => item.id === id.value);
+      articleID = await readFile("./db.json", { flag: "a+" });
+      articleID = articleID.toString();
+      if (articleID != "") {
+        articleID = JSON.parse(articleID).valids;
+        articleID = articleID.find((item) => item.id === id.value);
+      }
     }
     return articleID;
   } catch (error) {
