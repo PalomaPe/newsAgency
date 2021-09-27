@@ -1,10 +1,10 @@
 let errorMessages;
-("use strict");
-const olderDate = require("./date");
+('use strict');
+const olderDate = require('./date');
 
 async function validateNullEmptyUndefindedLength(field, value, length) {
   switch (value) {
-    case "":
+    case '':
       {
         errorMessages += `          Missing ${field} field  \n`;
         return false;
@@ -23,7 +23,7 @@ async function validateNullEmptyUndefindedLength(field, value, length) {
       }
       break;
     default:
-      if (value.length <= length) {
+      if (value.length < length) {
         return true;
       }
       errorMessages += `          Field ${field}is longer than ${length.toString()}\n`;
@@ -32,24 +32,20 @@ async function validateNullEmptyUndefindedLength(field, value, length) {
 }
 
 const validateID = async function (id) {
-  if (id != null && id.length > 35)
-    return validateNullEmptyUndefindedLength("id", id, 36);
-  else {
-    errorMessages += `          Field id is shorter than 36\n`;
-    return false;
-  }
+  if (id != null && id.length == 36) return validateNullEmptyUndefindedLength('id', id, 37);
+  return false;
 };
 
 const validateTitle = async function (title) {
-  return validateNullEmptyUndefindedLength("title", title, 255);
+  return validateNullEmptyUndefindedLength('title', title, 256);
 };
 
 const validateAuthor = async function (author) {
-  return validateNullEmptyUndefindedLength("author", author, 100);
+  return validateNullEmptyUndefindedLength('author', author, 101);
 };
 
 const validateDate = function (date) {
-  if (typeof date !== "undefined" && date != null && date != "") {
+  if (typeof date !== 'undefined' && date != null && date != '') {
     try {
       /* let currentDate = new Date();
       currentDate.setHours(0, 0, 0, 0);
@@ -57,10 +53,10 @@ const validateDate = function (date) {
       if (olderDate(date)) {
         return true;
       }
-      errorMessages += "          Invalid date \n";
+      errorMessages += '          Invalid date \n';
       return false;
     } catch (error) {
-      errorMessages += "          The date format is not valid \n";
+      errorMessages += '          The date format is not valid \n';
       return false;
     }
   } else return false;
@@ -72,28 +68,28 @@ const validateModificationDate = async function (modifiedDate) {
 
 const validatePublicationDate = async function (publishedDate) {
   return (
-    publishedDate === null || publishedDate == "" || validateDate(publishedDate)
+    publishedDate === null || publishedDate == '' || validateDate(publishedDate)
   );
 };
 
 function isValidURL(string) {
   const res = string.match(
-    /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+    /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
   );
   return res !== null;
 }
 
 const validateURL = async function (url, publishedDate) {
-  if (publishedDate != null && publishedDate != "") {
-    if (url != "" && url != null && isValidURL(url)) {
+  if (publishedDate != null && publishedDate != '') {
+    if (url != '' && url != null && isValidURL(url)) {
       const articleURL = new URL(url);
-      if (`${articleURL.protocol}//` == "https://") {
+      if (`${articleURL.protocol}//` == 'https://') {
         return true;
       }
-      errorMessages += "          Invalid protocol \n";
+      errorMessages += '          Invalid protocol \n';
       return false;
     }
-    errorMessages += "          Missing URL \n";
+    errorMessages += '          Missing URL \n';
     return false;
   }
   return true;
@@ -101,50 +97,47 @@ const validateURL = async function (url, publishedDate) {
 
 const validateKeywords = async function (keywords) {
   let areValidStringValues = true;
-  if (typeof keywords !== "undefined" && keywords != null) {
+  if (typeof keywords !== 'undefined' && keywords != null) {
     let i = 0;
     if (keywords.length > 0 && keywords.length < 4) {
       while (i < keywords.length && areValidStringValues) {
-        areValidStringValues =
-          typeof keywords[i] === "string" && keywords[i] != "";
+        areValidStringValues = typeof keywords[i] === 'string' && keywords[i] != '';
         i++;
       }
       if (areValidStringValues) {
         return true;
       }
-      errorMessages += "          Not all keywords are valid strings \n";
+      errorMessages += '          Not all keywords are valid strings \n';
       return false;
     }
-    if (keywords.length < 1)
-      errorMessages += "          There is no keyword \n";
-    else errorMessages += "          There are too much keywords \n";
+    if (keywords.length < 1) errorMessages += '          There is no keyword \n';
+    else errorMessages += '          There are too much keywords \n';
     return false;
   }
   if (keywords == undefined) {
     return true;
   }
-  errorMessages += "          keywords field is empty \n";
+  errorMessages += '          keywords field is empty \n';
   return false;
 };
 
 const validateReadMins = async function (readMins) {
-  if (readMins != (undefined && null && "")) {
+  if (readMins != (undefined && null && '')) {
     if (readMins >= 1 && readMins <= 20) {
       return true;
     }
-    if (readMins < 1) errorMessages += "          Too few reading minutes \n";
-    else errorMessages += "          Too much reading minutes \n";
+    if (readMins < 1) errorMessages += '          Too few reading minutes \n';
+    else errorMessages += '          Too much reading minutes \n';
     return false;
   }
-  if (readMins == undefined)
-    errorMessages += "          Missing readMins field \n";
-  else errorMessages += "          readMins field is empty \n";
+  if (readMins == undefined) errorMessages += '          Missing readMins field \n';
+  else errorMessages += '          readMins field is empty \n';
   return false;
 };
 
 async function articleValidation(article, fileName) {
   let articleIsValid = true;
-  errorMessages = "";
+  errorMessages = '';
   const results = await Promise.all([
     validateID(article.id),
     validateTitle(article.title),
@@ -160,7 +153,7 @@ async function articleValidation(article, fileName) {
   });
   if (articleIsValid) {
     console.log(`VALID   - ${fileName}\n`);
-    return "";
+    return '';
   }
   console.log(`INVALID - ${fileName}\n${errorMessages}`);
   return errorMessages;
