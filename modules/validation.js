@@ -26,7 +26,7 @@ async function validateNullEmptyUndefindedLength(field, value, length) {
       if (value.length <= length) {
         return true;
       }
-      errorMessages += `          Field ${field} is longer than ${length.toString()}\n`;
+      errorMessages += `          Field ${field}is longer than ${length.toString()}\n`;
       return false;
   }
 }

@@ -1,11 +1,3 @@
-/*
-
-    Iteration #3: Batch processing
-
-    Batch or batch processing.
-
-*/
-
 const util = require("util");
 const fs = require("fs");
 

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "process": "node controllers/process.js",
-    "iteration3": "node controllers/batch.js",
+    "server": "node server.js",
+    "iteration4": "node server.js",
     "lint": "eslint ."
   },
   "author": "Paloma Peirano",

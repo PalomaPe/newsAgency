@@ -1,3 +1,8 @@
+/*
+  Iteración #2: Escribiendo en archivos
+  Extender la implementación de la iteración #1 para centralizar los artículos validados correctamente en una base de datos en archivos.
+*/
+
 const fs = require("fs");
 const v = require("../modules/validation");
 const util = require("util");
