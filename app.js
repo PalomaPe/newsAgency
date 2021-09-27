@@ -1,3 +1,11 @@
+/*
+
+  Iteration # 10: Logs
+
+  Create logs of all operations executed on the web server.
+
+*/
+
 const express = require("express");
 const app = express();
 const port = 8000;

@@ -1,9 +1,8 @@
-const { MongoClient } = require('mongodb');
-const dotenv = require('dotenv').config();
+const { MongoClient } = require("mongodb");
+const dotenv = require("dotenv").config();
 
 console.log(dotenv.parsed);
 
-const uri = 'mongodb+srv://paloma:<password>@cluster0.fnzkn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 const client = new MongoClient(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

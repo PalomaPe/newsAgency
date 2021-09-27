@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "process": "node controllers/process.js",
-    "iteration9": "node appdb.js",
+    "iteration10": "node appdb.json",
     "lint": "eslint ."
   },
   "author": "Paloma Peirano",
