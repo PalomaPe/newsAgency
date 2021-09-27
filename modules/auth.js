@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     return res.status(403).json({ message: "Not alowed" });
   }
   const token = req.headers.authorization.split(" ")[1];
-  if (req.method == "POST" && token > 0 && token < 11) {
+  if (req.method === "POST" && token > 0 && token < 11) {
     return next();
   }
   const idParam = req.params.id;

@@ -122,4 +122,4 @@ authorsdb.delete("/:id", auth, async (req, res) => {
     });
 });
 
-module.exports = authorsdb;
+module.exports = Object.freeze(authorsdb);

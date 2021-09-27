@@ -3,24 +3,24 @@
     Procesamiento en lotes o batch.
 */
 
-const util = require("util");
-const fs = require("fs");
+const util = require('util');
+const fs = require('fs');
 
 const readFile = util.promisify(fs.readFile);
-const path = require("path");
-const v = require("../modules/validation");
+const path = require('path');
+const v = require('../modules/validation');
 
 async function comparision(parsedData, fileName) {
   try {
     const errOut = await v.articleValidation(parsedData, fileName);
-    return errOut === "";
+    return errOut === '';
   } catch (error) {
     return console.log(error);
   }
 }
 
 async function batchProcess(fileName) {
-  const datadir = path.join(path.dirname(__filename), "../data", fileName);
+  const datadir = path.join(path.dirname(__filename), '../data', fileName);
   return readFile(datadir).then(async (data) => {
     const d = data.toString();
     const parsedData = JSON.parse(d);
@@ -37,7 +37,7 @@ const readDir = new Promise((resolve, reject) => {
   const arraysArticles = new Object();
   arraysArticles.valids = [];
   arraysArticles.invalids = [];
-  const datadir = path.join(path.dirname(__filename), "../data");
+  const datadir = path.join(path.dirname(__filename), '../data');
   fs.readdir(datadir, (err, filesNames) => {
     if (err) {
       reject(err);
@@ -58,13 +58,13 @@ readDir
     let jsonValids = {};
     jsonValids.valids = arraysArticles.valids;
     jsonValids = JSON.stringify(jsonValids);
-    fs.appendFile("db.json", jsonValids, (err) => {
+    fs.appendFile('db.json', jsonValids, (err) => {
       if (err) console.log(err);
     });
     let jsonInvalids = {};
     jsonInvalids.invalids = arraysArticles.invalids;
     jsonInvalids = JSON.stringify(jsonInvalids);
-    fs.appendFile("invalids.json", jsonInvalids, (err) => {
+    fs.appendFile('invalids.json', jsonInvalids, (err) => {
       if (err) console.log(err);
     });
   })

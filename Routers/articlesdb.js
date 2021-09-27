@@ -197,4 +197,4 @@ articlesdb.delete("/:id", auth, async (req, res) => {
   }
 });
 
-module.exports = articlesdb;
+module.exports = Object.freeze(articlesdb);

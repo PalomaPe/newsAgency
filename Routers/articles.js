@@ -55,4 +55,4 @@ articles.post("/", async (req, res) => {
   }
 });
 
-module.exports = articles;
+module.exports = Object.freeze(articles);

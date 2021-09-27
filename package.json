@@ -5,8 +5,12 @@
   "main": "index.js",
   "scripts": {
     "process": "node controllers/process.js",
-    "iteration10": "node appdb.json",
-    "lint": "eslint ."
+    "start": "node server.js",
+    "final": "node appdb.js",
+    "test": "mocha",
+    "coverage": "nyc --reporter=lcov --reporter=text npm run test",
+    "lint": "eslint .  --ext .js",
+    "lint-fix": "eslint --fix --ext .js,.jsx ."
   },
   "author": "Paloma Peirano",
   "license": "ISC",
@@ -26,13 +30,13 @@
     "joi": "^17.4.0",
     "joi-date-extensions": "^1.2.0",
     "mocha": "^9.0.3",
-    "module": "^1.2.5",
+    "module": "^1.1.0",
     "mongodb": "^3.6.10",
     "mongoose": "^5.13.7",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.12",
     "nyc": "^15.1.0",
-    "objectid": "^3.2.1",
+    "objectid": "^2.3.0",
     "path": "^0.12.7",
     "prettier": "^2.3.2",
     "regex": "^0.1.1",
@@ -47,7 +51,10 @@
   },
   "devDependencies": {
     "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-google": "^0.14.0",
     "eslint-config-loopback": "^13.1.0",
-    "eslint-config-strongloop": "^2.1.0"
+    "eslint-config-strongloop": "^2.1.0",
+    "eslint-plugin-import": "^2.24.2"
   }
 }
