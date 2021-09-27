@@ -1,3 +1,8 @@
+/*
+    Iteración #3: Procesamiento en lotes
+    Procesamiento en lotes o batch.
+*/
+
 const util = require("util");
 const fs = require("fs");
 

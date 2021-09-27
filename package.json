@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "process": "node controllers/process.js",
-    "server": "node server.js",
-    "iteration4": "node server.js",
+    "start": "node server.js",
+    "iteration5": "node app.js",
     "lint": "eslint ."
   },
   "author": "Paloma Peirano",
