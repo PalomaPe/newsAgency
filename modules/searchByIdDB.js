@@ -1,8 +1,8 @@
-const { request } = require("express");
 const fs = require("fs");
 const { promisify } = require("util");
 const readFile = promisify(fs.readFile);
-var id = new Object();
+
+const id = new Object();
 
 function splitURL(requestURL) {
   if (requestURL.length > 36) {
@@ -15,16 +15,18 @@ function splitURL(requestURL) {
 }
 
 async function search(requestURL) {
-  let articleID = null;
+  let articleID = "";
   splitURL(requestURL);
   try {
     if (id.valid) {
-      articleID = await readFile("./db.json");
-      articleID = JSON.parse(articleID).valids;
-      articleID = articleID.find((item) => item.id === id.value);
+      articleID = await readFile("./db.json", { flag: "a+" });
+      articleID = articleID.toString();
+      if (articleID != "") {
+        articleID = JSON.parse(articleID).valids;
+        articleID = articleID.find((item) => item.id === id.value);
+      }
     }
-    if (articleID != undefined) return articleID;
-    else return "There is no document with id " + id.value;
+    return articleID;
   } catch (error) {
     console.log(error);
   }
