@@ -32,8 +32,12 @@ async function validateNullEmptyUndefindedLength(field, value, length) {
 }
 
 const validateID = async function (id) {
-  if (id != null && id.length == 36) return validateNullEmptyUndefindedLength('id', id, 37);
-  return false;
+  if (id != null && id.length > 35)
+    return validateNullEmptyUndefindedLength("id", id, 36);
+  else {
+    errorMessages += `          Field id is shorter than 36\n`;
+    return false;
+  }
 };
 
 const validateTitle = async function (title) {
