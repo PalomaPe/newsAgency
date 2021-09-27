@@ -1,0 +1,10 @@
+{
+  "id": "e62f8d18-412f-4d86-8a19-99b6c3381741",
+  "title": "fs.readFile vs streams to read text files in node.js",
+  "url": "https://medium.com/@dalaidunc/fs-readfile-vs-streams-to-read-text-files-in-node-js-5dd0710c80ea",
+  "keywords": ["Nodejs", "Filesystem", "Comparison"],
+  "modifiedAt": "08/22/2017",
+  "publishedAt": "08/22/2017",
+  "author": "Duncan Grant",
+  "readMins": 3
+}
