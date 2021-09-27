@@ -1,14 +1,17 @@
-const fs = require("fs");
-const util = require("util");
+const fs = require('fs');
+const { func } = require('joi');
+const { Writable } = require('stream');
+const { json } = require('body-parser');
+const util = require('util');
 
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
-const path = require("path");
+const path = require('path');
 
 async function appendToDB(article) {
   let parsedData;
   try {
-    const dbdir = path.join(path.dirname(__filename), "../db.json");
+    const dbdir = path.join(path.dirname(__filename), '../db.json');
     await readFile(dbdir).then((data) => {
       parsedData = JSON.parse(data).valids;
       parsedData.push(article);

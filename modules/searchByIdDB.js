@@ -1,6 +1,11 @@
-const fs = require("fs");
-const { promisify } = require("util");
+const { request } = require('express');
+const fs = require('fs');
+const { promisify } = require('util');
+
 const readFile = promisify(fs.readFile);
+const createReadStream = promisify(fs.createReadStream);
+const { resolve } = require('path');
+const { json } = require('body-parser');
 
 const id = new Object();
 
@@ -15,16 +20,13 @@ function splitURL(requestURL) {
 }
 
 async function search(requestURL) {
-  let articleID = "";
+  let articleID = null;
   splitURL(requestURL);
   try {
     if (id.valid) {
-      articleID = await readFile("./db.json", { flag: "a+" });
-      articleID = articleID.toString();
-      if (articleID != "") {
-        articleID = JSON.parse(articleID).valids;
-        articleID = articleID.find((item) => item.id === id.value);
-      }
+      articleID = await readFile('./db.json');
+      articleID = JSON.parse(articleID).valids;
+      articleID = articleID.find((item) => item.id === id.value);
     }
     return articleID;
   } catch (error) {
