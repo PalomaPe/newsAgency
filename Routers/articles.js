@@ -1,6 +1,8 @@
 const express = require("express");
 const fs = require("fs");
 const s = require("../modules/searchByIdDB");
+const v = require("../modules/validation");
+const p = require("../modules/post.js");
 const articles = express.Router();
 
 articles.get("/", (req, res) => {
@@ -33,6 +35,23 @@ articles.get("/:id", async (req, res) => {
     return res.status(200).send(articleId);
   } catch (err) {
     console.log(err);
+  }
+});
+
+articles.post("/", async (req, res) => {
+  try {
+    res.setHeader("Content-Type", "application/json");
+    const article = req.body;
+    let errMessages = await v.articleValidation(article, "from Postman");
+    if (errMessages == "") {
+      await p.appendToDB(article);
+      res.status(201).send("Posted in db");
+    } else {
+      await p.appendToInvalids(article);
+      res.status(400).send(errMessages);
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 

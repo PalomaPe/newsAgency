@@ -1,8 +1,11 @@
 /*
 
-  Iteration #5: Web server with ExpressJS
+  Iteration #6: Processing POST
 
-  Refactor the implementation of iteration #4, using the NodeJS Express framework.
+  Add the POST / articles endpoint, where you will receive the data for a new article. The data must be validated using the same validation
+  rules already implemented.
+  After validation, write to the file db.json or invalid.json as appropriate. In case the validation is successful, the article will be
+  available in memory and accessible through the GET / articles / <id> endpoint.
   
 */
 
