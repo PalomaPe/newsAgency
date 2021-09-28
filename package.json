@@ -5,10 +5,7 @@
   "main": "index.js",
   "scripts": {
     "process": "node controllers/process.js",
-    "start": "node server.js",
-    "server": "nodemon serverMD.js",
-    "test": "mocha",
-    "coverage": "nyc --reporter=lcov --reporter=text npm run test",
+    "iteration2" :"node controllers/process.js",
     "lint": "eslint ."
   },
   "author": "Paloma Peirano",
