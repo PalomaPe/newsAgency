@@ -1,5 +1,5 @@
-const { MongoClient } = require('mongodb');
-const dotenv = require('dotenv').config();
+const { MongoClient } = require("mongodb");
+const dotenv = require("dotenv").config();
 
 console.log(dotenv.parsed);
 
@@ -23,4 +23,4 @@ async function run() {
 }
 run().catch(console.dir);
 
-module.exports = { client };
+module.exports = Object.freeze({ client });

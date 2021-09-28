@@ -1,6 +1,6 @@
 const btoa = require("btoa");
 
-module.exports = (req, res, next) => {
+module.exports = Object.freeze((req, res, next) => {
   if (!req.headers.authorization) {
     return res.status(403).json({ message: "Not alowed" });
   }
@@ -14,4 +14,4 @@ module.exports = (req, res, next) => {
     return next();
   }
   return res.status(403).json({ message: "Not alowed" });
-};
+});

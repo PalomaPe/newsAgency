@@ -10,4 +10,4 @@ function dateToFileRotateFileName() {
   return filename;
 }
 
-module.exports = dateToFileRotateFileName;
+module.exports = Object.freeze(dateToFileRotateFileName);

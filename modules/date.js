@@ -26,4 +26,4 @@ function olderDate(date) {
   return false;
 }
 
-module.exports = olderDate;
+module.exports = Object.freeze(olderDate);

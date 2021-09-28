@@ -12,4 +12,4 @@ const AuthorSchema = new Schema({
 
 const Author = mongoose.model("author", AuthorSchema);
 
-module.exports = Author;
+module.exports = Object.freeze(Author);

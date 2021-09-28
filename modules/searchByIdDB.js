@@ -32,7 +32,7 @@ async function search(requestURL) {
   }
 }
 
-module.exports = {
+module.exports = Object.freeze({
   splitURL,
   search,
-};
+});

@@ -20,6 +20,6 @@ async function appendToDB(article) {
   }
 }
 
-module.exports = {
+module.exports = Object.freeze({
   appendToDB,
-};
+});

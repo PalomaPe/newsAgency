@@ -13,4 +13,4 @@ const middleware = (schema, property) => (req, res, next) => {
   }
 };
 
-module.exports = middleware;
+module.exports = Object.freeze(middleware);
