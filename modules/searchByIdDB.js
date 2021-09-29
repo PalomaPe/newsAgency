@@ -7,7 +7,6 @@ function splitURL(requestURL) {
   if (requestURL.length > 36) {
     id.value = requestURL.substring(10, 47);
   } else {
-    console.log("here");
     id.value = requestURL;
   }
   id.valid = id.value.length == 36;
