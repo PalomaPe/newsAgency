@@ -1,12 +1,11 @@
 const fs = require("fs");
 const { promisify } = require("util");
 const readFile = promisify(fs.readFile);
-
 const id = new Object();
 
 function splitURL(requestURL) {
   if (requestURL.length > 36) {
-    id.value = requestURL.substring(10, 46);
+    id.value = requestURL.substring(10, 47);
   } else {
     id.value = requestURL;
   }
