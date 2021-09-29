@@ -8,6 +8,7 @@
     "start": "node server.js",
     "final": "node appdb.js",
     "test": "mocha",
+    "iteration11": "mocha",
     "coverage": "nyc --reporter=lcov --reporter=text npm run test",
     "lint": "eslint .  --ext .js",
     "lint-fix": "eslint --fix --ext .js,.jsx ."
