@@ -1,16 +1,7 @@
-/*
-
-  Iteration #4: Basic web server with NodeJS
-
-  Create a web server that exposes the articles stored in the db.json file through a URL.
-  
-*/
-
 const http = require("http");
 const port = 8080;
 const fs = require("fs");
 const s = require("./modules/searchByIdDB");
-
 const server = http.createServer(async (request, response) => {
   try {
     response.setHeader("Content-Type", "application/json");
@@ -51,7 +42,6 @@ const server = http.createServer(async (request, response) => {
     console.log(error);
   }
 });
-
 server.listen(port, () => {
   console.log(`Server listening on PORT: ${port}`);
 });
