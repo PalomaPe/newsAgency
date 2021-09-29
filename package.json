@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "process": "node controllers/process.js",
-    "server": "node server.js",
+    "start": "node server.js",
     "iteration4": "node server.js",
     "lint": "eslint ."
   },
