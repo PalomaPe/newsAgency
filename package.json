@@ -7,7 +7,9 @@
     "description": "Rebuilding project Entrenamiento NodeJS: Instafeed News Agency",
     "main": "index.js",
     "scripts": {
-      "lint": "eslint ."
+      "lint": "eslint .",
+      "process": "controllers/process.js",
+      "iteration1": "controllers/process.js"
     },
     "author": "Paloma Peirano",
     "license": "ISC",
