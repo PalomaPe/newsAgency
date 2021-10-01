@@ -3,7 +3,6 @@ const authorsdb = express.Router();
 const mongoose = require("mongoose");
 const Author = require("../modules/author");
 const mongoClient = require("../helpers/mongoClient");
-const auth = require("../modules/auth");
 const { ObjectID, ObjectId } = require("bson");
 
 mongoose.Promise = global.Promise;
