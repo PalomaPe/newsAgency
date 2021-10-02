@@ -4,7 +4,7 @@ NodeJS Training
 
 	Instafeed News Agency
 
-This is the repo where the iterations of the project are stored in their respective branches. Each folder has the script “iterationX” in order to make the execution simpler.
+This is the repo where the iterations of the project are stored in their respective branches. Each folder has the script “iterationX” in order to make the execution simpler. Other scripts: npm lint, npm lint-fix, npm run process, npm run start, npm run test, npm run coverage.
 
 Iteration 1, and 2 execute the controller file, process.js, related to local files validation.
 Iteration 3 executes the controller batch.js, performing the batch processing of local files.
