@@ -2,9 +2,9 @@
 
 NodeJS Training
 
-	Instafeed News Agency
+    Instafeed News Agency
 
-This is the repo where the iterations of the project are stored in their respective branches. Each folder has the script “iterationX” in order to make the execution simpler.
+This is the repo where the iterations of the project are stored in their respective branches. Each folder has the script “iterationX” in order to make the execution simpler. Other scripts: npm lint, npm lint-fix, npm run process, npm run start, npm run test, npm run coverage.
 
 Iteration 1, and 2 execute the controller file, process.js, related to local files validation.
 Iteration 3 executes the controller batch.js, performing the batch processing of local files.
@@ -33,4 +33,4 @@ Standardize procedures which can be solved in different ways.
 Follow MVC more accurately.
 
 Known Issues:
-	1 . The purpose of the endpoint PUT in authorsdb.js and articles.js is to differentiate in the response message sent if the document was updated or created. This response depends on the field nModified of the result returned by the promise Author.updateOne(), if a document was updated the value of the field is 1, 0 otherwise. The issue comes out when the PUT request is sent over an existing document with no modifications in the request body, so nModified becomes 0 and the response shows a document was added. On the other hand, there is a possible fix, in the endpoint PUT implemented for articles in articlesdb.js, the documents in the collection are simply counted before and after the operation and this resolves the message in the response.
+1 . The purpose of the endpoint PUT in authorsdb.js and articles.js is to differentiate in the response message sent if the document was updated or created. This response depends on the field nModified of the result returned by the promise Author.updateOne(), if a document was updated the value of the field is 1, 0 otherwise. The issue comes out when the PUT request is sent over an existing document with no modifications in the request body, so nModified becomes 0 and the response shows a document was added. On the other hand, there is a possible fix, in the endpoint PUT implemented for articles in articlesdb.js, the documents in the collection are simply counted before and after the operation and this resolves the message in the response.
