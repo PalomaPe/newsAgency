@@ -54,7 +54,6 @@ authorsdb.put("/:id", auth, async (req, res) => {
     upsert: true,
   })
     .then((results) => {
-      console.log(results);
       if (results.nModified) {
         return res.status(200).json({
           message: `Document with id ${idParam} was updated`,
