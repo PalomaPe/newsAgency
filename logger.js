@@ -1,21 +1,21 @@
-const winston = require("winston");
-require("winston-daily-rotate-file");
+const winston = require('winston');
+require('winston-daily-rotate-file');
 
 const logConfiguration = {
   transports: [
     new winston.transports.DailyRotateFile({
-      filename: "application-%DATE%.log",
-      dirname: "./logs/",
+      filename: 'application-%DATE%.log',
+      dirname: './logs/',
       levels: { error: 1, warn: 2, info: 3 },
       handleExceptions: true,
       colorize: true,
       json: false,
       zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "14d",
+      maxSize: '20m',
+      maxFiles: '14d',
     }),
     new winston.transports.Console({
-      level: "error",
+      level: 'error',
     }),
   ],
   exitOnError: false,

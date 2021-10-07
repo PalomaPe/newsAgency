@@ -1,32 +1,33 @@
-const express = require("express");
+const express = require('express');
+
 const authorsdb = express.Router();
-const mongoose = require("mongoose");
-const Author = require("../modules/author");
-const mongoClient = require("../helpers/mongoClient");
-const auth = require("../modules/auth");
-const { ObjectID, ObjectId } = require("bson");
+const mongoose = require('mongoose');
+const { ObjectId } = require('bson');
+const Author = require('../modules/author');
+const mongoClient = require('../helpers/mongoClient');
+const auth = require('../modules/auth');
 
 mongoose.Promise = global.Promise;
 
-authorsdb.get("/", (req, res) => {
+authorsdb.get('/', (req, res) => {
   Author.find()
     .then((docs) => {
       res.status(200).json(docs);
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json({ message: "Could not show documents" });
+      res.status(500).json({ message: 'Could not show documents' });
     });
 });
 
-authorsdb.get("/:id", async (req, res) => {
+authorsdb.get('/:id', async (req, res) => {
   const idParam = req.params.id;
   Author.findOne({ _id: idParam })
     .then((results) => {
       if (results == null) {
         return res
           .status(404)
-          .json({ message: "There is no document with id " + idParam });
+          .json({ message: `There is no document with id ${idParam}` });
       }
       return res.status(200).json(results);
     })
@@ -35,19 +36,19 @@ authorsdb.get("/:id", async (req, res) => {
     });
 });
 
-authorsdb.post("/", auth, async (req, res) => {
+authorsdb.post('/', auth, async (req, res) => {
   const author = req.body;
   Author.create(author)
     .then(() => {
-      res.status(200).json({ message: "Author posted in database" });
+      res.status(200).json({ message: 'Author posted in database' });
     })
     .catch((err) => {
       console.log(err);
-      res.status(404).json({ message: "Could not post in database" });
+      res.status(404).json({ message: 'Could not post in database' });
     });
 });
 
-authorsdb.put("/:id", auth, async (req, res) => {
+authorsdb.put('/:id', auth, async (req, res) => {
   const idParam = req.params.id;
   Author.updateOne({ _id: idParam }, req.body, {
     currentDate: { lastModified: true },
@@ -71,8 +72,8 @@ authorsdb.put("/:id", auth, async (req, res) => {
     });
 });
 
-authorsdb.patch("/:id", auth, async (req, res) => {
-  res.setHeader("Content-Type", "application/json");
+authorsdb.patch('/:id', auth, async (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
   const idParam = req.params.id;
   Author.updateOne({ _id: idParam }, req.body)
     .then((result) => {
@@ -90,29 +91,23 @@ authorsdb.patch("/:id", auth, async (req, res) => {
     });
 });
 
-authorsdb.delete("/:id", auth, async (req, res) => {
+authorsdb.delete('/:id', auth, async (req, res) => {
   const idParam = req.params.id;
   Author.find({ _id: idParam })
-    .then((result) => {
-      return result[0].articles;
-    })
+    .then((result) => result[0].articles)
     .then((articlesIds) => {
-      let objectsIds = articlesIds.map((id) => ObjectId(id));
+      const objectsIds = articlesIds.map((id) => ObjectId(id));
       return mongoClient.client
         .db(process.env.DB_NAME)
-        .collection("articles")
+        .collection('articles')
         .deleteMany({
           _id: {
             $in: objectsIds,
           },
         });
     })
-    .then(() => {
-      return Author.deleteOne({ _id: idParam });
-    })
-    .then(() => {
-      return res.status(204).end();
-    })
+    .then(() => Author.deleteOne({ _id: idParam }))
+    .then(() => res.status(204).end())
     .catch((err) => {
       console.log(err);
       return res

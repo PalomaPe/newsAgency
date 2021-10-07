@@ -1,11 +1,11 @@
-const btoa = require("btoa");
+const btoa = require('btoa');
 
 module.exports = Object.freeze((req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(403).json({ message: "Not alowed" });
+    return res.status(403).json({ message: 'Not alowed' });
   }
-  const token = req.headers.authorization.split(" ")[1];
-  if (req.method === "POST" && token > 0 && token < 11) {
+  const token = req.headers.authorization.split(' ')[1];
+  if (req.method === 'POST' && token > 0 && token < 11) {
     return next();
   }
   const idParam = req.params.id;
@@ -13,5 +13,5 @@ module.exports = Object.freeze((req, res, next) => {
   if (payload === token) {
     return next();
   }
-  return res.status(403).json({ message: "Not alowed" });
+  return res.status(403).json({ message: 'Not alowed' });
 });
