@@ -24,7 +24,7 @@ What went good:
 More accurate use and understanding of promises, promisifying and async / await functioning.
 Complete CRUD operations for the articles and authors collections in the database.
 New concepts and related procedures management acquired. E.g.: middleware, unit test, test coverage, endpoint protection, logging.
-Eslnt configuration.
+Eslint configuration.
 Implementation of solutions and alternatives.
 
 What could improve:
