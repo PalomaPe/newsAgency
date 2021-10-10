@@ -14,7 +14,6 @@ Iteration 7 and onwards execute appdb.js, which associates the app with MongoDB.
 
 What went wrong:
 How versions were controlled. Iterations weren’t pushed to the git repo as soon as completed, causing dependent code that needed to be pulled apart to obtain the current branches.
-Fixing the code with Eslint does not seem to be working properly: the document gets restored when saving the fixes made.
 Folders and files might not be ordered correctly.
 Closing of db not set up.
 Did not figure out how to use fs.stat/fs.access without getting an ending program error when a file does not exist.
@@ -25,6 +24,7 @@ What went good:
 More accurate use and understanding of promises, promisifying and async / await functioning.
 Complete CRUD operations for the articles and authors collections in the database.
 New concepts and related procedures management acquired. E.g.: middleware, unit test, test coverage, endpoint protection, logging.
+Eslnt configuration.
 Implementation of solutions and alternatives.
 
 What could improve:
