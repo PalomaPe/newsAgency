@@ -36,6 +36,9 @@ authorsdb.get("/:id", async (req, res) => {
 });
 
 authorsdb.post("/", auth, async (req, res) => {
+  /**
+   * REVIEW: ¿Validación?.
+   */
   const author = req.body;
   Author.create(author)
     .then(() => {
@@ -60,11 +63,24 @@ authorsdb.put("/:id", auth, async (req, res) => {
           message: `Document with id ${idParam} was updated`,
         });
       }
+      /**
+       * REVIEW:
+       *  En este caso sería 201 Created.
+       */
       return res.status(200).json({
         message: `Document with id ${idParam} was successfully added`,
       });
     })
     .catch((error) => {
+      /**
+       * Review:
+       * Acá solo entra si ocurrió un error con la consulta,
+       * pero no si el author no apareción. Sobre todo porque tienes
+       * un upsert, lo cual si no está lo insertará.
+       *
+       * Lo correcto es devolver error 500 (al menos) para indicar que,
+       * el problema es del API, el servidor, y no del cliente.
+       */
       console.error(error);
       res
         .status(404)
@@ -87,12 +103,53 @@ authorsdb.patch("/:id", auth, async (req, res) => {
         .json({ message: `Could not found document with id ${idParam}` });
     })
     .catch((err) => {
+      /**
+       * REVIEW:
+       *  Si ocurre un error en la ejecución, la petición actual se queda colgada infinitamente,
+       *  dado que no estás devolviendo nada utilizando res.status(5xx)... etc.
+       *
+       *  Siempre se debe enviar una respuesta, de lo contrario el cliente recibirá un timeout
+       *  al cabo de X tiempo, pero la petición seguirá siendo procesada por el servidor,
+       *  consumiento recursos.
+       */
       console.error(err);
     });
 });
 
 authorsdb.delete("/:id", auth, async (req, res) => {
   const idParam = req.params.id;
+  /**
+   * REVIEW:
+   * Prefiere la ejecución en paralelo siempre que sea posible.
+
+  // Validar que exista el autor.
+  const author = await Author.findOne({ _id: idParam });
+  if (!author) {
+    return res.status(404).end();
+  }
+
+  // IDs para eliminar.
+  let articlesToDelete = author.articles.map((id) => ObjectId(id));
+
+  // Ejecución en paralela.
+  // Dependiendo de la applicación, quizás se pueda utilzar Promise.allSettled()
+  // Y aceptar ciertos márgenes de errores.
+  // Por ejemplo, podemos aceptar que falle el borrado de artículos,
+  //  siempre y cuando el autor se haya eliminado.
+  //
+  Promise.all([
+    mongoClient.client
+      .db(process.env.DB_NAME)
+      .collection("articles")
+      .deleteMany({
+        _id: { $in: articlesToDelete },
+      }),
+
+      Author.deleteOne({ _id: idParam }),
+  ]).then(() => {
+    return res.status(204).end();
+  });
+  */
   Author.find({ _id: idParam })
     .then((result) => {
       return result[0].articles;
@@ -115,6 +172,12 @@ authorsdb.delete("/:id", auth, async (req, res) => {
       return res.status(204).end();
     })
     .catch((err) => {
+      /**
+       * REVIEW:
+       * Acá solo entra si hay un error en la ejecución de la consulta.
+       * Lo correcto es devolver 500.
+       * Si no existe o el resultado es vacío entra por el .then() ya que se ejecución bien.
+       */
       console.log(err);
       return res
         .status(404)

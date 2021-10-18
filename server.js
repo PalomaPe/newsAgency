@@ -17,6 +17,7 @@ const server = http.createServer(async (request, response) => {
     response.setHeader("Content-Type", "application/json");
     request.on("error", (err) => {
       console.error(err);
+      // REVIEW: Podría ser problema del servidor, y en ese caso sería 500 u otro 5xx.
       response.statusCode = 400;
       response.end();
     });
@@ -24,6 +25,8 @@ const server = http.createServer(async (request, response) => {
       console.error(err);
     });
     if (request.method === "GET" && request.url === "/articles") {
+      // REVIEW: Si solamente es para devolver el contenido,
+      // lo mejor es solo lectura y no append (a+).
       const readable = fs.createReadStream("./db.json", { flags: "a+" });
       return readable.pipe(response);
     }

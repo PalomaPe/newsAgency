@@ -1,4 +1,14 @@
 const { MongoClient } = require('mongodb');
+
+/**
+ * REVIEW:
+ *  Lo recomendado es hacer esta llamada en el script principal,
+ *  en el que se ejcuta como primero.
+ *  Por ejemplo, el server.js o el app.js
+ *
+ *  Ya para cuando se llame a este mongoClient.js
+ *  las variables de environment deberían de estar disponibles.
+ */
 const dotenv = require('dotenv').config();
 
 console.log(dotenv.parsed);
