@@ -1,3 +1,16 @@
+/**
+ * REVIEW:
+ *  El objeto Date ya soporta comparación por si mismo.
+ *  Soporte los operadores: >, <, <= or >=
+ *
+ *  Es decir podrías hacer, date < new Date();
+ *
+ *  O pudes también comparar numéricamente con los segundos transcurridos.
+ *  date.
+ *    date.getTime() < (new Date()).getTime()
+ *    date.getTime() < Date.now()
+ */
+
 function olderDate(date) {
   const currentDate = new Date();
   const aDate = new Date(date);

@@ -1,3 +1,9 @@
+/**
+ * REVIEW:
+ * ¿Cuál es la diferencia con middlewarePost?
+ * Generalmente hacemos los middlewares genéricos sin importar el método HTTP.
+ */
+
 const Joi = require('joi');
 
 const middleware = (schema, property) => (req, res, next) => {

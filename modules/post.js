@@ -9,6 +9,15 @@ async function appendToDB(article) {
   let parsedData;
   try {
     const dbdir = path.join(path.dirname(__filename), "../db.json");
+    /**
+     * REVIEW:
+     *  Puedes anidar promesas para lograr "mejor claridad" del código.
+     *
+     *  await readFile(dbdir)
+     *   .then(data => JSON.parse(data).valids)
+     *   .then(parsedData => ([...parsedData, article]))
+     *   .then(saveList => writeFile(dbdir, saveList));
+     */
     await readFile(dbdir).then((data) => {
       parsedData = JSON.parse(data).valids;
       parsedData.push(article);
