@@ -38,7 +38,7 @@ const server = http.createServer(async (request, response) => {
       });
       return readable2.pipe(response);
 
-      // 7const readable = fs.createReadStream('./db.json', { flags: 'a+' });
+      // const readable = fs.createReadStream('./db.json', { flags: 'a+' });
       // return readable.pipe(response);
     }
     if (
