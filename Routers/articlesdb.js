@@ -1,29 +1,30 @@
-const express = require("express");
-const articlesdb = express.Router();
-const { ObjectId } = require("mongodb");
-const v = require("../modules/validation");
-const middlewarePost = require("../modules/middlewarePost");
-const middlewarePatch = require("../modules/middlewarePatch");
-const mongoClient = require("../helpers/mongoClient");
-const { aSchemaPost, aSchemaPatch } = require("../modules/schemaValidation");
-const Author = require("../modules/author");
-const auth = require("../modules/auth");
+const express = require('express');
 
-articlesdb.get("/", async (req, res) => {
+const articlesdb = express.Router();
+const { ObjectId } = require('mongodb');
+const v = require('../modules/validation');
+const middlewarePost = require('../modules/middlewarePost');
+const middlewarePatch = require('../modules/middlewarePatch');
+const mongoClient = require('../helpers/mongoClient');
+const { aSchemaPost, aSchemaPatch } = require('../modules/schemaValidation');
+const Author = require('../modules/author');
+const auth = require('../modules/auth');
+
+articlesdb.get('/', async (req, res) => {
   const articlesCol = await mongoClient.client
     .db(process.env.DB_NAME)
-    .collection("articles")
+    .collection('articles')
     .find({})
     .toArray();
   res.status(200).json(articlesCol);
 });
 
-articlesdb.get("/:id", async (req, res) => {
+articlesdb.get('/:id', async (req, res) => {
   const idParam = req.params.id;
   try {
     const articlesCol = await mongoClient.client
       .db(process.env.DB_NAME)
-      .collection("articles")
+      .collection('articles')
       .find({ _id: ObjectId(idParam) })
       .toArray();
 
@@ -47,13 +48,13 @@ articlesdb.get("/:id", async (req, res) => {
   }
 });
 
-articlesdb.post("/", auth, middlewarePost(aSchemaPost), async (req, res) => {
+articlesdb.post('/', auth, middlewarePost(aSchemaPost), async (req, res) => {
   const articlePost = req.body;
-  const errMessages = await v.articleValidation(articlePost, "from Postman");
-  if (errMessages == "") {
+  const errMessages = await v.articleValidation(articlePost, 'from Postman');
+  if (errMessages == '') {
     await mongoClient.client
       .db(process.env.DB_NAME)
-      .collection("articles")
+      .collection('articles')
       .insertOne(articlePost);
 
     /**
@@ -73,7 +74,7 @@ articlesdb.post("/", auth, middlewarePost(aSchemaPost), async (req, res) => {
      */
     let idNew = await mongoClient.client
       .db(process.env.DB_NAME)
-      .collection("articles")
+      .collection('articles')
       .find({}, { _id: 1 })
       .sort({ $natural: -1 })
       .limit(1)
@@ -81,10 +82,10 @@ articlesdb.post("/", auth, middlewarePost(aSchemaPost), async (req, res) => {
     idNew = idNew[0]._id;
     Author.updateOne(
       { _id: req.body.author },
-      { $addToSet: { articles: idNew } }
+      { $addToSet: { articles: idNew } },
     )
       .then(() => {
-        res.status(201).json({ message: "Document posted in db" });
+        res.status(201).json({ message: 'Document posted in db' });
       })
       .catch((err) => console.log(err));
   } else {
@@ -93,7 +94,7 @@ articlesdb.post("/", auth, middlewarePost(aSchemaPost), async (req, res) => {
 });
 
 articlesdb.patch(
-  "/:id",
+  '/:id',
   auth,
   middlewarePatch(aSchemaPatch),
   async (req, res) => {
@@ -120,12 +121,12 @@ articlesdb.patch(
     try {
       await mongoClient.client
         .db(process.env.DB_NAME)
-        .collection("articles")
+        .collection('articles')
         .updateOne(
           { _id: ObjectId(idParam) },
           {
             $set: reqBody,
-          }
+          },
         )
         .then((result) => {
           if (result.result.n) {
@@ -140,11 +141,11 @@ articlesdb.patch(
     } catch (err) {
       console.error(err);
     }
-  }
+  },
 );
 
 articlesdb.put(
-  "/:id",
+  '/:id',
   auth,
   middlewarePatch(aSchemaPatch),
   async (req, res) => {
@@ -173,12 +174,12 @@ articlesdb.put(
        */
       docCountBefore = await mongoClient.client
         .db(process.env.DB_NAME)
-        .collection("articles")
+        .collection('articles')
         .countDocuments();
-      docCountBefore = parseInt(docCountBefore);
+      docCountBefore = parseInt(docCountBefore, 10);
       await mongoClient.client
         .db(process.env.DB_NAME)
-        .collection("articles")
+        .collection('articles')
         .updateOne(
           { _id: ObjectId(idParam) },
           {
@@ -186,17 +187,17 @@ articlesdb.put(
           },
           {
             upsert: true,
-          }
+          },
         );
       docCountAfter = await mongoClient.client
         .db(process.env.DB_NAME)
-        .collection("articles")
+        .collection('articles')
         .countDocuments();
-      docCountAfter = parseInt(docCountAfter);
+      docCountAfter = parseInt(docCountAfter, 10);
       if (docCountBefore < docCountAfter) {
         idNew = await mongoClient.client
           .db(process.env.DB_NAME)
-          .collection("articles")
+          .collection('articles')
           .find({}, { _id: 1 })
           .sort({ $natural: -1 })
           .limit(1)
@@ -204,13 +205,11 @@ articlesdb.put(
         idNew = idNew[0]._id;
         Author.updateOne(
           { _id: req.body.author },
-          { $addToSet: { articles: idNew } }
+          { $addToSet: { articles: idNew } },
         )
-          .then(() => {
-            return res.status(200).json({
-              message: `Document with id ${idParam} was successfully added`,
-            });
-          })
+          .then(() => res.status(200).json({
+            message: `Document with id ${idParam} was successfully added`,
+          }))
           .catch((err) => {
             console.error(err);
           });
@@ -225,15 +224,15 @@ articlesdb.put(
         .status(404)
         .json({ message: `The id ${idParam} is not valid` });
     }
-  }
+  },
 );
 
-articlesdb.delete("/:id", auth, async (req, res) => {
+articlesdb.delete('/:id', auth, async (req, res) => {
   const idParam = req.params.id;
   try {
     let authorId = await mongoClient.client
       .db(process.env.DB_NAME)
-      .collection("articles")
+      .collection('articles')
       .find({ _id: ObjectId(idParam) })
       .toArray();
     authorId = authorId[0].author;
@@ -258,19 +257,17 @@ articlesdb.delete("/:id", auth, async (req, res) => {
      */
     await mongoClient.client
       .db(process.env.DB_NAME)
-      .collection("articles")
+      .collection('articles')
       .deleteOne({ _id: ObjectId(idParam) });
     Author.updateOne(
       { _id: authorId },
       {
         $pull: { articles: idParam },
-      }
-    ).then((result) => {
-      return res.status(204).end();
-    });
-    //.catch((err) => {
+      },
+    ).then(() => res.status(204).end());
+    // .catch((err) => {
     //  console.log(err);
-    //});
+    // });
   } catch (error) {
     console.error(error);
     return res

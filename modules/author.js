@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
-const { v4: uuidv4 } = require("uuid");
+const { v4: uuidv4 } = require('uuid');
 
 const AuthorSchema = new Schema({
   _id: { type: String, default: uuidv4 },
@@ -10,6 +10,6 @@ const AuthorSchema = new Schema({
   __v: { type: Number, select: false },
 });
 
-const Author = mongoose.model("author", AuthorSchema);
+const Author = mongoose.model('author', AuthorSchema);
 
 module.exports = Author;

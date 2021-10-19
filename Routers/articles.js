@@ -1,10 +1,11 @@
-const express = require("express");
-const fs = require("fs");
+const express = require('express');
+const fs = require('fs');
 // REVIEW:
 // Utiliza variables descriptivas.
-const s = require("../modules/searchByIdDB");
-const v = require("../modules/validation");
-const p = require("../modules/post.js");
+const s = require('../modules/searchByIdDB');
+const v = require('../modules/validation');
+const p = require('../modules/post');
+
 const articles = express.Router();
 
 /**
@@ -22,18 +23,18 @@ const articles = express.Router();
  *     ...
  *   }
  */
-articles.get("/", (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-  fs.readFile("./db.json", { flag: "a+" }, (err, data) => {
+articles.get('/', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  fs.readFile('./db.json', { flag: 'a+' }, (err, data) => {
     if (err) {
       console.log(err);
       res.send({ message: err });
     } else {
       let d = data.toString();
-      if (d == "") {
+      if (d == '') {
         return res
           .status(404)
-          .json({ message: "There are no documents in database" });
+          .json({ message: 'There are no documents in database' });
       }
       d = JSON.parse(data);
       // REVIEW:
@@ -48,30 +49,31 @@ articles.get("/", (req, res) => {
   });
 });
 
-articles.get("/:id", async (req, res) => {
+articles.get('/:id', async (req, res) => {
   try {
-    res.setHeader("Content-Type", "application/json");
+    res.setHeader('Content-Type', 'application/json');
     const articleId = await s.search(req.params.id);
-    if (articleId == "")
+    if (articleId == '') {
       return res
         .status(404)
-        .json({ message: "There is no document with id " + req.params.id });
+        .json({ message: `There is no document with id ${req.params.id}` });
+    }
     return res.status(200).send(articleId);
   } catch (err) {
     console.log(err);
   }
 });
 
-articles.post("/", async (req, res) => {
+articles.post('/', async (req, res) => {
   try {
-    res.setHeader("Content-Type", "application/json");
+    res.setHeader('Content-Type', 'application/json');
     const article = req.body;
     // REVIEW:
     // Se valida sin importar el cliente, "from Postman" no aplica.
-    let errMessages = await v.articleValidation(article, "from Postman");
-    if (errMessages == "") {
+    const errMessages = await v.articleValidation(article, 'from Postman');
+    if (errMessages == '') {
       await p.appendToDB(article);
-      res.status(201).send("Posted in db");
+      res.status(201).send('Posted in db');
     } else {
       await p.appendToInvalids(article);
       res.status(400).send(errMessages);

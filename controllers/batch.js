@@ -34,7 +34,7 @@ async function getAndProcessFiles(filesNames) {
 }
 
 const readDir = new Promise((resolve, reject) => {
-  const arraysArticles = new Object();
+  const arraysArticles = {};
   arraysArticles.valids = [];
   arraysArticles.invalids = [];
   const datadir = path.join(path.dirname(__filename), '../data');

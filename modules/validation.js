@@ -1,5 +1,4 @@
 let errorMessages;
-('use strict');
 const olderDate = require('./date');
 
 /**
@@ -22,23 +21,14 @@ async function validateNullEmptyUndefindedLength(field, value, length) {
   // de lo contrario el primer 'case' fallaría.
   switch (value) {
     case '':
-      {
-        errorMessages += `          Missing ${field} field  \n`;
-        return false;
-      }
-      break;
+      errorMessages += `          Missing ${field} field  \n`;
+      return false;
     case null:
-      {
-        errorMessages += `          Field ${field} is null \n`;
-        return false;
-      }
-      break;
+      errorMessages += `          Field ${field} is null \n`;
+      return false;
     case undefined:
-      {
-        errorMessages += `          Field ${field} is undefined \n`;
-        return false;
-      }
-      break;
+      errorMessages += `          Field ${field} is undefined \n`;
+      return false;
     default:
       if (value.length <= length) {
         return true;
@@ -135,7 +125,7 @@ const validateKeywords = async function (keywords) {
        */
       while (i < keywords.length && areValidStringValues) {
         areValidStringValues = typeof keywords[i] === 'string' && keywords[i] != '';
-        i++;
+        i += 1;
       }
       if (areValidStringValues) {
         return true;
@@ -157,7 +147,7 @@ const validateKeywords = async function (keywords) {
 const validateReadMins = async function (readMins) {
   /**
    * REVIEW: Utiliza Number.isInteger() para comprobar si es un numero.
-   * 
+   *
    * if (!Number.isInteger(readMins) || (readMins >= 1 && readMins <= 20)) {
    *    ...
    * }

@@ -7,11 +7,11 @@
 */
 
 const fs = require('fs');
-const v = require('../modules/validation');
 const util = require('util');
 
 const readFile = util.promisify(fs.readFile);
 const path = require('path');
+const v = require('../modules/validation');
 
 const stdin = process.openStdin();
 
@@ -41,7 +41,7 @@ async function batchProcess(fileName, arrayArticles) {
 }
 
 const readDir = new Promise((resolve, reject) => {
-  const arrayArticles = new Object();
+  const arrayArticles = {};
   arrayArticles.valids = [];
   arrayArticles.invalids = [];
   console.log(
