@@ -27,10 +27,25 @@ const server = http.createServer(async (request, response) => {
     if (request.method === 'GET' && request.url === '/articles') {
       // REVIEW: Si solamente es para devolver el contenido,
       // lo mejor es solo lectura y no append (a+).
-      const readable = fs.createReadStream('./db.json', { flags: 'a+' });
-      return readable.pipe(response);
+      // FIX:
+      /* En la solucion anterior partía de que si no existe una carpeta db.json, un listado vacío y 200 eran devueltos. */
+
+      const readable2 = fs.createReadStream('./db.json');
+      readable2.on('error', (err) => {
+        response.statusCode = 404;
+        console.log(err);
+        return response.end();
+      });
+      return readable2.pipe(response);
+
+      // 7const readable = fs.createReadStream('./db.json', { flags: 'a+' });
+      // return readable.pipe(response);
     }
-    if (request.method === 'GET' && request.url.substring(0, 10) == '/articles/' && s.splitURL(request.url)) {
+    if (
+      request.method === 'GET'
+      && request.url.substring(0, 10) == '/articles/'
+      && s.splitURL(request.url)
+    ) {
       const article = await s.search(request.url);
       if (article != '' && article != undefined) {
         response.statusCode = 200;
