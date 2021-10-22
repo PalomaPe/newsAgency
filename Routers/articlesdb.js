@@ -8,10 +8,9 @@ const mValidation = require("../modules/mValidation");
 const { aSchemaPost, aSchemaPatch } = require("../modules/schemaValidation");
 const Author = require("../modules/author");
 const auth = require("../modules/auth");
-// const { db } = require("../modules/author");
+const { db } = require("../modules/author");
 
 articlesdb.get("/", async (req, res) => {
-  console.log("entra");
   const articlesCol = await db.collection("articles").find({}).toArray();
   res.status(200).json(articlesCol);
 });
@@ -27,7 +26,7 @@ articlesdb.get("/:id", async (req, res) => {
     // REVIEW:
     //  Acá es donde revisas si articlesCol no es nulo ni vacío
     //  y si es así devuelves 404.
-    if (articlesCol == []) {
+    if (articlesCol.length == 0) {
       res
         .status(404)
         .json({ message: `There is no document with id ${idParam}` });
@@ -42,14 +41,15 @@ articlesdb.get("/:id", async (req, res) => {
      *
      *  Si ese llegase a ser el caso, la consulta no da un error,
      *  pero si retorna un valor vació, po lo que nunca entra al catch.
-     */
+     *
+     * */
     console.log(err);
   }
 });
 
 articlesdb.post("/", auth, mValidation(aSchemaPost), async (req, res) => {
   const articlePost = req.body;
-  const errMessages = await v.articleValidation(articlePost, "from Postman");
+  const errMessages = await v.articleValidationReview(articlePost);
   if (errMessages == "") {
     await db.collection("articles").insertOne(articlePost);
 
@@ -229,6 +229,7 @@ articlesdb.delete("/:id", auth, async (req, res) => {
      *    return res.status(204).end();
      *  });
      */
+
     await db.collection("articles").deleteOne({ _id: ObjectId(idParam) });
     Author.updateOne(
       { _id: authorId },

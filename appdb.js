@@ -55,5 +55,5 @@ app.use("/authors", authors);
 
 app.listen(port, () => {
   console.log("info", `Server up and listening on PORT: ${port}`);
-  logger.log("info", `Server listening on PORT: ${port}`);
+  //logger.log("info", `Server listening on PORT: ${port}`);
 });
