@@ -1,5 +1,6 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient } = require("mongodb");
 
+MongoClient.Promise = global.Promise;
 /**
  * REVIEW:
  *  Lo recomendado es hacer esta llamada en el script principal,
@@ -9,8 +10,10 @@ const { MongoClient } = require('mongodb');
  *  Ya para cuando se llame a este mongoClient.js
  *  las variables de environment deberían de estar disponibles.
  */
-const dotenv = require('dotenv').config();
+const dotenv = require("dotenv").config();
+const express = require("express");
 
+const app = express();
 console.log(dotenv.parsed);
 
 const client = new MongoClient(process.env.MONGODB_URI, {
@@ -24,7 +27,8 @@ async function run() {
     await client.connect();
 
     // Establish and verify connection
-    await client.db(process.env.DB_NAME).command({ ping: 1 });
+    const db = await client.db(process.env.DB_NAME).command({ ping: 1 });
+    app.locals.db = db; // FIX: make db available globally in the app
     console.log(`Connected successfully to db ${process.env.DB_NAME}`);
   } finally {
     // Ensures that the client will close when you finish/error

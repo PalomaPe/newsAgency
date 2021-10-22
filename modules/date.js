@@ -11,7 +11,19 @@
  *    date.getTime() < Date.now()
  */
 
+// FIX: usar date como Thruthy, usar Date().getTime().
+
 function olderDate(date) {
+  if (date) {
+    let currentDate = new Date();
+    currentDate = currentDate.setHours(0, 0, 0, 0); // Apéndice A: campos publishedAt y modifiedAt siempre estarán es pasado
+    return new Date(date).getTime() < currentDate;
+  }
+  return false;
+}
+
+/*
+ function olderDate(date) {
   const currentDate = new Date();
   const aDate = new Date(date);
   const todayDay = currentDate.getDate();
@@ -37,6 +49,8 @@ function olderDate(date) {
     return false;
   }
   return false;
-}
+} 
+
+*/
 
 module.exports = olderDate;

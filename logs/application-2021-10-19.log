@@ -1,0 +1,39 @@
+{"level":"info","message":"Server listening on PORT: 8000"}
+{"level":"info","message":"Server listening on PORT: 8000"}
+{"level":"info","message":"Server listening on PORT: 8000"}
+[]
+::1 - - [19/Oct/2021:14:41:50 +0000] "GET /articles HTTP/1.1" 200 2 "-" "PostmanRuntime/7.28.4"
+[{"articles":[],"_id":"6d8de91e-f097-453a-8b7d-aa29790c149a","name":"prueba put"}]
+::1 - - [19/Oct/2021:14:41:55 +0000] "GET /authors HTTP/1.1" 200 82 "-" "PostmanRuntime/7.28.4"
+{"level":"info","message":"Server listening on PORT: 8000"}
+{"level":"info","message":"Server listening on PORT: 8000"}
+[{"articles":[],"_id":"6d8de91e-f097-453a-8b7d-aa29790c149a","name":"prueba put"}]
+::1 - - [19/Oct/2021:14:58:07 +0000] "GET /authors HTTP/1.1" 200 82 "-" "PostmanRuntime/7.28.4"
+[]
+::1 - - [19/Oct/2021:14:58:11 +0000] "GET /articles HTTP/1.1" 200 2 "-" "PostmanRuntime/7.28.4"
+{"level":"info","message":"Server listening on PORT: 8000"}
+::1 - - [19/Oct/2021:14:59:10 +0000] "POST /articles HTTP/1.1" 500 1999 "-" "PostmanRuntime/7.28.4"
+{"error":"\"id\" length must be 36 characters long","level":"info"}
+::1 - - [19/Oct/2021:14:59:35 +0000] "POST /articles HTTP/1.1" 422 52 "-" "PostmanRuntime/7.28.4"
+{"error":"\"sdf\" is not allowed","level":"info"}
+::1 - - [19/Oct/2021:14:59:46 +0000] "POST /articles HTTP/1.1" 422 34 "-" "PostmanRuntime/7.28.4"
+{"message":"Document posted in db","level":"info"}
+::1 - - [19/Oct/2021:14:59:58 +0000] "POST /articles HTTP/1.1" 201 35 "-" "PostmanRuntime/7.28.4"
+[{"_id":"616edd6de04d1a21043685f1","id":"2d77b0c6-858f-407f-a518-58371ac9adcb","title":"Promises in Node.js  prueba mongo global","url":"https://www.geeksforgeeks.org/promises-in-node-js/","keywords":["JavaScript","Async"],"modifiedAt":"07/13/2019","publishedAt":"07/13/2019","author":"s","readMins":3}]
+::1 - - [19/Oct/2021:15:00:04 +0000] "GET /articles HTTP/1.1" 200 303 "-" "PostmanRuntime/7.28.4"
+{"level":"info","message":"Server listening on PORT: 8000"}
+[{"_id":"616edd6de04d1a21043685f1","id":"2d77b0c6-858f-407f-a518-58371ac9adcb","title":"Promises in Node.js  prueba mongo global","url":"https://www.geeksforgeeks.org/promises-in-node-js/","keywords":["JavaScript","Async"],"modifiedAt":"07/13/2019","publishedAt":"07/13/2019","author":"s","readMins":3}]
+::1 - - [19/Oct/2021:15:01:17 +0000] "GET /articles HTTP/1.1" 200 303 "-" "PostmanRuntime/7.28.4"
+[{"_id":"616edd6de04d1a21043685f1","id":"2d77b0c6-858f-407f-a518-58371ac9adcb","title":"Promises in Node.js  prueba mongo global","url":"https://www.geeksforgeeks.org/promises-in-node-js/","keywords":["JavaScript","Async"],"modifiedAt":"07/13/2019","publishedAt":"07/13/2019","author":"s","readMins":3}]
+::1 - - [19/Oct/2021:15:01:28 +0000] "GET /articles HTTP/1.1" 200 303 "-" "PostmanRuntime/7.28.4"
+[{"_id":"616edd6de04d1a21043685f1","id":"2d77b0c6-858f-407f-a518-58371ac9adcb","title":"Promises in Node.js  prueba mongo global","url":"https://www.geeksforgeeks.org/promises-in-node-js/","keywords":["JavaScript","Async"],"modifiedAt":"07/13/2019","publishedAt":"07/13/2019","author":"s","readMins":3}]
+::1 - - [19/Oct/2021:15:31:43 +0000] "GET /articles HTTP/1.1" 200 303 "-" "PostmanRuntime/7.28.4"
+{"level":"info","message":"Server listening on PORT: 8000"}
+{"message":"Document posted in db","level":"info"}
+::1 - - [19/Oct/2021:15:35:19 +0000] "POST /articles HTTP/1.1" 201 35 "-" "PostmanRuntime/7.28.4"
+[{"_id":"616edd6de04d1a21043685f1","id":"2d77b0c6-858f-407f-a518-58371ac9adcb","title":"Promises in Node.js  prueba mongo global","url":"https://www.geeksforgeeks.org/promises-in-node-js/","keywords":["JavaScript","Async"],"modifiedAt":"07/13/2019","publishedAt":"07/13/2019","author":"s","readMins":3},{"_id":"616ee4ffebff1810fc85b352","id":"2d77b0c6-858f-407f-a518-58371ac9adcb","title":"Promises in Node.js  PUREBA MONGO CLIENT GLOBAL","url":"https://www.geeksforgeeks.org/promises-in-node-js/","keywords":["JavaScript","Async"],"modifiedAt":"07/13/2019","publishedAt":"07/13/2019","author":"s","readMins":3},{"_id":"616ee5b535f6af0c308de6b8","id":"2d77b0c6-858f-407f-a518-58371ac9adcb","title":"Promises in Node.js  PUREBA MONGO CLIENT GLOBAL","url":"https://www.geeksforgeeks.org/promises-in-node-js/","keywords":["JavaScript","Async"],"modifiedAt":"07/13/2019","publishedAt":"07/13/2019","author":"s","readMins":3}]
+::1 - - [19/Oct/2021:15:35:24 +0000] "GET /articles HTTP/1.1" 200 921 "-" "PostmanRuntime/7.28.4"
+{"level":"info","message":"Server listening on PORT: 8000"}
+::1 - - [19/Oct/2021:15:39:11 +0000] "GET /author HTTP/1.1" 404 145 "-" "PostmanRuntime/7.28.4"
+[{"articles":[],"_id":"6d8de91e-f097-453a-8b7d-aa29790c149a","name":"prueba put"}]
+::1 - - [19/Oct/2021:15:39:15 +0000] "GET /authors HTTP/1.1" 200 82 "-" "PostmanRuntime/7.28.4"

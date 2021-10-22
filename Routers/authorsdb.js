@@ -1,13 +1,10 @@
 const express = require('express');
 
 const authorsdb = express.Router();
-const mongoose = require('mongoose');
 const { ObjectId } = require('bson');
 const Author = require('../modules/author');
 const mongoClient = require('../helpers/mongoClient');
 const auth = require('../modules/auth');
-
-mongoose.Promise = global.Promise;
 
 authorsdb.get('/', (req, res) => {
   Author.find()
