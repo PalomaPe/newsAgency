@@ -1,28 +1,28 @@
-const express = require("express");
+const express = require('express');
 
 const authorsdb = express.Router();
-const { ObjectId } = require("bson");
+const { ObjectId } = require('bson');
 const {
   Author,
   authorSchemaPost,
   authorSchemaPatch,
-} = require("../modules/author");
-const mValidation = require("../modules/mValidation");
-const mongoClient = require("../helpers/mongoClient");
-const auth = require("../modules/auth");
+} = require('../modules/author');
+const mValidation = require('../modules/mValidation');
+const mongoClient = require('../helpers/mongoClient');
+const auth = require('../modules/auth');
 
-authorsdb.get("/", (req, res) => {
+authorsdb.get('/', (req, res) => {
   Author.find()
     .then((docs) => {
       res.status(200).json(docs);
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json({ message: "Could not show documents" });
+      res.status(500).json({ message: 'Could not show documents' });
     });
 });
 
-authorsdb.get("/:id", async (req, res) => {
+authorsdb.get('/:id', async (req, res) => {
   const idParam = req.params.id;
   Author.findOne({ _id: idParam })
     .then((results) => {
@@ -38,7 +38,7 @@ authorsdb.get("/:id", async (req, res) => {
     });
 });
 
-authorsdb.post("/", auth, mValidation(authorSchemaPost), async (req, res) => {
+authorsdb.post('/', auth, mValidation(authorSchemaPost), async (req, res) => {
   /**
    * REVIEW: ¿Validación?.
    */
@@ -46,16 +46,16 @@ authorsdb.post("/", auth, mValidation(authorSchemaPost), async (req, res) => {
   const author = req.body;
   Author.create(author)
     .then(() => {
-      res.status(200).json({ message: "Author posted in database" });
+      res.status(200).json({ message: 'Author posted in database' });
     })
     .catch((err) => {
       console.log(err);
-      res.status(404).json({ message: "Could not post in database" });
+      res.status(404).json({ message: 'Could not post in database' });
     });
 });
 
 authorsdb.put(
-  "/:id",
+  '/:id',
   auth,
   mValidation(authorSchemaPatch),
   async (req, res) => {
@@ -95,11 +95,11 @@ authorsdb.put(
           .status(500)
           .send({ message: `Could not update document with id ${idParam}` });
       });
-  }
+  },
 );
 
 authorsdb.patch(
-  "/:id",
+  '/:id',
   auth,
   mValidation(authorSchemaPatch),
   async (req, res) => {
@@ -131,10 +131,10 @@ authorsdb.patch(
           .status(500)
           .json({ message: `Could not update document with id ${idParam}` });
       });
-  }
+  },
 );
 
-authorsdb.delete("/:id", auth, async (req, res) => {
+authorsdb.delete('/:id', auth, async (req, res) => {
   const idParam = req.params.id;
   /**
    * REVIEW:
@@ -177,7 +177,7 @@ authorsdb.delete("/:id", auth, async (req, res) => {
   const articlesToDelete = author.articles.map((id) => ObjectId(id));
 
   Promise.all([
-    db.collection("articles").deleteMany({
+    db.collection('articles').deleteMany({
       _id: { $in: articlesToDelete },
     }),
     Author.deleteOne({ _id: idParam }),
@@ -204,10 +204,10 @@ authorsdb.delete("/:id", auth, async (req, res) => {
    */
   // console.log(err);
   // FIX:
-  //return res
+  // return res
   //  .status(500)
   //  .json({ message: `Could not find a document with id ${idParam}` });
-  //});
+  // });
 });
 
 module.exports = Object.freeze(authorsdb);

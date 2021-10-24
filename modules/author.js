@@ -1,8 +1,8 @@
-const Joi = require("joi").extend(require("@joi/date"));
-const mongoose = require("mongoose");
+const Joi = require('joi').extend(require('@joi/date'));
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
-const { v4: uuidv4 } = require("uuid");
+const { v4: uuidv4 } = require('uuid');
 
 const AuthorSchema = new Schema({
   _id: { type: String, default: uuidv4 },
@@ -21,7 +21,7 @@ const authorSchemaPatch = Joi.object({
   articles: Joi.array().items(Joi.string().length(36)),
 });
 
-const Author = mongoose.model("author", AuthorSchema);
+const Author = mongoose.model('author', AuthorSchema);
 
 module.exports = {
   Author,

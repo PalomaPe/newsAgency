@@ -1,4 +1,4 @@
-const btoa = require("btoa");
+const btoa = require('btoa');
 
 module.exports = (req, res, next) => {
   /**
@@ -10,9 +10,9 @@ module.exports = (req, res, next) => {
    *  - 403 = Forbidden. Se conoce quien es pero no tiene acceso.
    */
   if (!req.headers.authorization) {
-    return res.status(401).json({ message: "Not alowed" });
+    return res.status(401).json({ message: 'Not alowed' });
   }
-  const token = req.headers.authorization.split(" ")[1];
+  const token = req.headers.authorization.split(' ')[1];
 
   // REVIEW:
   // Las peticiones GET también se protegen.
@@ -21,10 +21,10 @@ module.exports = (req, res, next) => {
   // Pero no le corresponde a esta función hacer valdiación basado en el método HTTP,
   // solo en si está el header o no presente.
   if (
-    req.method === "POST" &&
-    Number.isInteger(parseInt("2", 10)) &&
-    token > 0 &&
-    token < 11
+    req.method === 'POST'
+    && Number.isInteger(parseInt('2', 10))
+    && token > 0
+    && token < 11
   ) {
     return next();
   }
@@ -34,7 +34,7 @@ module.exports = (req, res, next) => {
     if (payload === token) {
       return next();
     }
-    return res.status(401).json({ message: "Not alowed" });
+    return res.status(401).json({ message: 'Not alowed' });
   }
-  return res.status(401).json({ message: "Not allowed" });
+  return res.status(401).json({ message: 'Not allowed' });
 };

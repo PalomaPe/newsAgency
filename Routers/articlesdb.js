@@ -55,8 +55,25 @@ articlesdb.post('/', auth, mValidation(aSchemaPost), async (req, res) => {
   const articlePost = req.body;
   const errMessages = await v.articleValidationReview(articlePost);
   if (errMessages == '') {
-    await db.collection('articles').insertOne(articlePost);
-
+    const authorExists = await Author.exists({ _id: articlePost.author });
+    if (authorExists) {
+      const { insertedId } = await db
+        .collection('articles')
+        .insertOne(articlePost);
+      Author.updateOne(
+        { _id: articlePost.author },
+        { $addToSet: { articles: insertedId } },
+      )
+        .then(() => res.status(201).json({ message: 'Document posted in db' }))
+        .catch((err) => {
+          console.log(err);
+          return res.status(500).json({ message: 'Could not update author' });
+        });
+    } else {
+      return res
+        .status(400)
+        .json({ message: `There is no author with id ${articlePost.author}` });
+    }
     /**
      * REVIEW:
      *  Innecesario, la operación insertOne() anterior, ya devuelve el ID generado.
@@ -72,8 +89,10 @@ articlesdb.post('/', auth, mValidation(aSchemaPost), async (req, res) => {
      *     En entornos de alta concurrencia esto suele suceder.
      *     Por lo que no hay garantía que idNew es el mismo documento que guardaste con insertOne().
      */
+    /*
+    await db.collection("articles").insertOne(articlePost);
     let idNew = await db
-      .collection('articles')
+      .collection("articles")
       .find({}, { _id: 1 })
       .sort({ $natural: -1 })
       .limit(1)
@@ -81,14 +100,15 @@ articlesdb.post('/', auth, mValidation(aSchemaPost), async (req, res) => {
     idNew = idNew[0]._id;
     Author.updateOne(
       { _id: req.body.author },
-      { $addToSet: { articles: idNew } },
+      { $addToSet: { articles: idNew } }
     )
       .then(() => {
-        res.status(201).json({ message: 'Document posted in db' });
+        res.status(201).json({ message: "Document posted in db" });
       })
       .catch((err) => console.log(err));
+    */
   } else {
-    res.status(400).json({ messages: errMessages });
+    return res.status(400).json({ messages: errMessages });
   }
 });
 
@@ -173,8 +193,6 @@ articlesdb.put('/:id', auth, mValidation(aSchemaPatch), async (req, res) => {
         },
       )
       .then((result) => {
-        console.log(result.matchedCount);
-        console.log(result.upsertedId);
         if (result.matchedCount == 0) {
           Author.updateOne(
             { _id: req.body.author },
