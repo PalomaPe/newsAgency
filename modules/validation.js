@@ -1,5 +1,5 @@
 let errorMessages;
-const olderDate = require("./date");
+const olderDate = require('./date');
 
 /**
  * REVIEW:
@@ -18,7 +18,7 @@ const olderDate = require("./date");
  */
 
 function isEmpty(field, value) {
-  if (value.trim() == "") {
+  if (value.trim() == '') {
     errorMessages += `          Empty ${field} field  \n`;
     return true;
   }
@@ -62,7 +62,7 @@ function isMinMaxLength(field, value, min, max) {
 }
 
 function isString(field, value) {
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     return true;
   }
   errorMessages += `          Field ${field} is too short  \n`;
@@ -107,31 +107,31 @@ const validateID = async function (id) {
   // Mejor: id && typeof id === 'string' && id.length != 35
   // FIX : individualizar functionalidades
   return (
-    !isNULL("id", id) &&
-    !isEmpty("id", id) &&
-    !isUndefined("id", id) &&
-    isString("id", id) &&
-    isLength("id", id, 36)
+    !isNULL('id', id)
+    && !isEmpty('id', id)
+    && !isUndefined('id', id)
+    && isString('id', id)
+    && isLength('id', id, 36)
   );
 };
 
 const validateTitle = async function (title) {
   return (
-    !isNULL("title", title) &&
-    !isEmpty("title", title) &&
-    !isUndefined("title", title) &&
-    isString("title", title) &&
-    isMaxLength("title", title, 255)
+    !isNULL('title', title)
+    && !isEmpty('title', title)
+    && !isUndefined('title', title)
+    && isString('title', title)
+    && isMaxLength('title', title, 255)
   );
 };
 
 const validateAuthor = async function (author) {
   return (
-    !isNULL("author", author) &&
-    !isEmpty("author", author) &&
-    !isUndefined("author", author) &&
-    isString("author", author) &&
-    isMaxLength("author", author, 100)
+    !isNULL('author', author)
+    && !isEmpty('author', author)
+    && !isUndefined('author', author)
+    && isString('author', author)
+    && isMaxLength('author', author, 100)
   );
 };
 
@@ -144,13 +144,12 @@ const validateDate = function (date) {
   try {
     if (olderDate(date)) {
       return true;
-    } else {
-      errorMessages += "          Invalid date \n";
-
-      return false;
     }
+    errorMessages += '          Invalid date \n';
+
+    return false;
   } catch (error) {
-    errorMessages += "          Invalid date \n";
+    errorMessages += '          Invalid date \n';
     return false;
   }
 };
@@ -161,28 +160,28 @@ const validateModificationDate = async function (modifiedDate) {
 
 const validatePublicationDate = async function (publishedDate) {
   return (
-    publishedDate === null || publishedDate == "" || validateDate(publishedDate)
+    publishedDate === null || publishedDate == '' || validateDate(publishedDate)
   );
 };
 
 function isValidURL(string) {
   const res = string.match(
-    /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+    /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
   );
   return res !== null;
 }
 
 const validateURL = async function (url, publishedDate) {
-  if (publishedDate != null && publishedDate != "") {
-    if (url != "" && url != null && isValidURL(url)) {
+  if (publishedDate != null && publishedDate != '') {
+    if (url != '' && url != null && isValidURL(url)) {
       const articleURL = new URL(url);
-      if (`${articleURL.protocol}//` == "https://") {
+      if (`${articleURL.protocol}//` == 'https://') {
         return true;
       }
-      errorMessages += "          Invalid protocol \n";
+      errorMessages += '          Invalid protocol \n';
       return false;
     }
-    errorMessages += "          Missing URL \n";
+    errorMessages += '          Missing URL \n';
     return false;
   }
   return true;
@@ -201,7 +200,7 @@ const validateKeywords = async function (keywords) {
        * }
        */
       const validKeyworks = keywords.filter(
-        (keyword) => typeof keyword === "string" && keyword.trim().length > 0
+        (keyword) => typeof keyword === 'string' && keyword.trim().length > 0,
       );
       const allKeywordsAreValid = validKeyworks.length === keywords.length;
       if (allKeywordsAreValid) {
@@ -214,15 +213,15 @@ const validateKeywords = async function (keywords) {
         i += 1;
       }
       */
-      errorMessages += "          Not all keywords are valid strings \n";
+      errorMessages += '          Not all keywords are valid strings \n';
       return false;
     }
-    if (keywords.length < 1)
-      errorMessages += "          There is no keyword \n";
-    else errorMessages += "          There are too much keywords \n";
+    if (keywords.length < 1) {
+      errorMessages += '          There is no keyword \n';
+    } else errorMessages += '          There are too much keywords \n';
     return false;
   }
-  errorMessages += "          keywords field is falsy \n";
+  errorMessages += '          keywords field is falsy \n';
   return false;
 };
 
@@ -239,13 +238,13 @@ const validateReadMins = async function (readMins) {
     if (Number.isInteger(readMins) && readMins >= 1 && readMins <= 20) {
       return true;
     }
-    if (readMins < 1) errorMessages += "          Too few reading minutes \n";
-    else errorMessages += "          Too much reading minutes \n";
+    if (readMins < 1) errorMessages += '          Too few reading minutes \n';
+    else errorMessages += '          Too much reading minutes \n';
     return false;
   }
-  if (readMins == undefined)
-    errorMessages += "          Missing readMins field \n";
-  else errorMessages += "          readMins field is not accurate \n";
+  if (readMins == undefined) {
+    errorMessages += '          Missing readMins field \n';
+  } else errorMessages += '          readMins field is not accurate \n';
   return false;
 };
 
@@ -266,7 +265,7 @@ const validateReadMins = async function (readMins) {
 
 // FIX: crear articleValidationReview y returnResult
 async function articleValidationReview(article) {
-  errorMessages = "";
+  errorMessages = '';
   await Promise.all([
     validateID(article.id),
     validateTitle(article.title),
@@ -282,9 +281,9 @@ async function articleValidationReview(article) {
 
 async function returnResult(article, fileName) {
   const resultErrors = await articleValidationReview(article);
-  if (resultErrors == "") {
+  if (resultErrors == '') {
     console.log(`VALID   - ${fileName}\n`);
-    return "";
+    return '';
   }
   console.log(`INVALID - ${fileName}\n${errorMessages}`);
   return errorMessages;
@@ -292,7 +291,7 @@ async function returnResult(article, fileName) {
 
 async function articleValidation(article, fileName) {
   let articleIsValid = true;
-  errorMessages = "";
+  errorMessages = '';
   const results = await Promise.all([
     validateID(article.id),
     validateTitle(article.title),
@@ -308,7 +307,7 @@ async function articleValidation(article, fileName) {
   });
   if (articleIsValid) {
     console.log(`VALID   - ${fileName}\n`);
-    return "";
+    return '';
   }
   console.log(`INVALID - ${fileName}\n${errorMessages}`);
   return errorMessages;

@@ -1,11 +1,11 @@
-const express = require("express");
-const fs = require("fs");
+const express = require('express');
+const fs = require('fs');
 // REVIEW:
 // Utiliza variables descriptivas.
 // FIX:
-const search = require("../modules/searchByIdDB");
-const validation = require("../modules/validation");
-const post = require("../modules/post");
+const search = require('../modules/searchByIdDB');
+const validation = require('../modules/validation');
+const post = require('../modules/post');
 
 const articles = express.Router();
 
@@ -25,17 +25,17 @@ const articles = express.Router();
  *   }
  */
 
-articles.get("/", (req, res) => {
-  fs.readFile("./db.json", { flag: "a+" }, (err, data) => {
+articles.get('/', (req, res) => {
+  fs.readFile('./db.json', { flag: 'a+' }, (err, data) => {
     if (err) {
       console.log(err);
       res.json({ message: err });
     } else {
       let d = data.toString();
-      if (d == "") {
+      if (d == '') {
         return res
           .status(404)
-          .json({ message: "There are no documents in database" });
+          .json({ message: 'There are no documents in database' });
       }
       // d = JSON.parse(data);
       // REVIEW:
@@ -51,10 +51,10 @@ articles.get("/", (req, res) => {
   });
 });
 
-articles.get("/:id", async (req, res) => {
+articles.get('/:id', async (req, res) => {
   try {
     const articleId = await search.search(req.params.id);
-    if (articleId == "") {
+    if (articleId == '') {
       return res
         .status(404)
         .json({ message: `There is no document with id ${req.params.id}` });
@@ -65,15 +65,15 @@ articles.get("/:id", async (req, res) => {
   }
 });
 
-articles.post("/", async (req, res) => {
+articles.post('/', async (req, res) => {
   try {
     const article = req.body;
     // REVIEW:
     // Se valida sin importar el cliente, "from Postman" no aplica.
     const errMessages = await validation.articleValidationReview(article);
-    if (errMessages == "") {
+    if (errMessages == '') {
       await post.appendToDB(article);
-      res.status(201).json({ message: "Posted in db" });
+      res.status(201).json({ message: 'Posted in db' });
     } else {
       res.status(400).json({ message: errMessages });
     }

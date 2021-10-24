@@ -1,4 +1,4 @@
-const { MongoClient } = require("mongodb");
+const { MongoClient } = require('mongodb');
 
 MongoClient.Promise = global.Promise;
 /**
@@ -10,8 +10,8 @@ MongoClient.Promise = global.Promise;
  *  Ya para cuando se llame a este mongoClient.js
  *  las variables de environment deberían de estar disponibles.
  */
-const dotenv = require("dotenv").config();
-const express = require("express");
+const dotenv = require('dotenv').config();
+const express = require('express');
 
 const app = express();
 console.log(dotenv.parsed);

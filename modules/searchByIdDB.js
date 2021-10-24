@@ -1,4 +1,4 @@
-const fs = require("fs/promises"); // FIX: fs.promisify(fs.readFile) => require fs/promises
+const fs = require('fs/promises'); // FIX: fs.promisify(fs.readFile) => require fs/promises
 // const { promisify } = require("util");
 // REVIEW:
 //  Dado que el uso de promisify es muy común y fs es uno de los módulos más utilizado,
@@ -27,13 +27,13 @@ function splitURL(requestURL) {
 }
 
 async function search(requestURL) {
-  let articleID = "";
+  let articleID = '';
   splitURL(requestURL);
   try {
     if (id.valid) {
-      articleID = await fs.readFile("./db.json", { flag: "a+" });
+      articleID = await fs.readFile('./db.json', { flag: 'a+' });
       articleID = articleID.toString();
-      if (articleID != "") {
+      if (articleID != '') {
         articleID = JSON.parse(articleID).valids;
         articleID = articleID.find((item) => item.id === id.value);
       }

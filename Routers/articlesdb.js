@@ -1,25 +1,30 @@
-const express = require("express");
+const express = require('express');
 
 const articlesdb = express.Router();
-const { ObjectId } = require("mongodb");
-const v = require("../modules/validation");
-const mValidation = require("../modules/mValidation");
-// const mongoClient = require("../helpers/mongoClient");
-const { aSchemaPost, aSchemaPatch } = require("../modules/schemaValidation");
-const Author = require("../modules/author");
-const auth = require("../modules/auth");
-const { db } = require("../modules/author");
+const { ObjectId } = require('mongodb');
+const v = require('../modules/validation');
+const mValidation = require('../modules/mValidation');
+// const mongoClient = require("../helpers/mongoClient"); // FIX: require en appdb.js, hacer global a la db
+const { aSchemaPost, aSchemaPatch } = require('../modules/schemaValidation');
+const Author = require('../modules/author');
+const auth = require('../modules/auth');
+const { db } = require('../modules/author');
 
-articlesdb.get("/", async (req, res) => {
-  const articlesCol = await db.collection("articles").find({}).toArray();
-  res.status(200).json(articlesCol);
+articlesdb.get('/', async (req, res) => {
+  const articlesCol = await db.collection('articles').find({}).toArray();
+  if (articlesCol.length == 0) {
+    return res
+      .status(404)
+      .json({ message: 'There are not articles in the database' });
+  }
+  return res.status(200).json(articlesCol);
 });
 
-articlesdb.get("/:id", async (req, res) => {
+articlesdb.get('/:id', async (req, res) => {
   const idParam = req.params.id;
   try {
     const articlesCol = await db
-      .collection("articles")
+      .collection('articles')
       .find({ _id: ObjectId(idParam) })
       .toArray();
 
@@ -47,11 +52,11 @@ articlesdb.get("/:id", async (req, res) => {
   }
 });
 
-articlesdb.post("/", auth, mValidation(aSchemaPost), async (req, res) => {
+articlesdb.post('/', auth, mValidation(aSchemaPost), async (req, res) => {
   const articlePost = req.body;
   const errMessages = await v.articleValidationReview(articlePost);
-  if (errMessages == "") {
-    await db.collection("articles").insertOne(articlePost);
+  if (errMessages == '') {
+    await db.collection('articles').insertOne(articlePost);
 
     /**
      * REVIEW:
@@ -69,7 +74,7 @@ articlesdb.post("/", auth, mValidation(aSchemaPost), async (req, res) => {
      *     Por lo que no hay garantía que idNew es el mismo documento que guardaste con insertOne().
      */
     let idNew = await db
-      .collection("articles")
+      .collection('articles')
       .find({}, { _id: 1 })
       .sort({ $natural: -1 })
       .limit(1)
@@ -77,10 +82,10 @@ articlesdb.post("/", auth, mValidation(aSchemaPost), async (req, res) => {
     idNew = idNew[0]._id;
     Author.updateOne(
       { _id: req.body.author },
-      { $addToSet: { articles: idNew } }
+      { $addToSet: { articles: idNew } },
     )
       .then(() => {
-        res.status(201).json({ message: "Document posted in db" });
+        res.status(201).json({ message: 'Document posted in db' });
       })
       .catch((err) => console.log(err));
   } else {
@@ -88,7 +93,7 @@ articlesdb.post("/", auth, mValidation(aSchemaPost), async (req, res) => {
   }
 });
 
-articlesdb.patch("/:id", auth, mValidation(aSchemaPatch), async (req, res) => {
+articlesdb.patch('/:id', auth, mValidation(aSchemaPatch), async (req, res) => {
   const idParam = req.params.id;
   /**
    * REVIEW:
@@ -110,14 +115,13 @@ articlesdb.patch("/:id", auth, mValidation(aSchemaPatch), async (req, res) => {
    */
   const reqBody = req.body;
   try {
-    await mongoClient.client
-      .db(process.env.DB_NAME)
-      .collection("articles")
+    await db
+      .collection('articles')
       .updateOne(
         { _id: ObjectId(idParam) },
         {
           $set: reqBody,
-        }
+        },
       )
       .then((result) => {
         if (result.result.n) {
@@ -134,7 +138,7 @@ articlesdb.patch("/:id", auth, mValidation(aSchemaPatch), async (req, res) => {
   }
 });
 
-articlesdb.put("/:id", auth, mValidation(aSchemaPatch), async (req, res) => {
+articlesdb.put('/:id', auth, mValidation(aSchemaPatch), async (req, res) => {
   const idParam = req.params.id;
   const reqBody = req.body;
   /**
@@ -142,37 +146,63 @@ articlesdb.put("/:id", auth, mValidation(aSchemaPatch), async (req, res) => {
    *  Todas estas variables se utilizan en el mismo if,
    *   - ¿Por qué no declararlas en la misma línea donde se asignan?
    */
-  let idNew;
-  let docCountBefore;
-  let docCountAfter;
+
+  /**
+   * REVIEW:
+   *   No necesitas contar los documentos antes,
+   *   para luego ver si el upsert actualizó o insertó.
+   *
+   *   Ver: https://docs.mongodb.com/manual/reference/method/db.collection.updateOne/
+   *   Ya el insertOne te devuelve esa info.
+   *   Por ejemplo, matchedCount te dice los documentos que coincidieron con el criterio
+   *   y por ende fueron actualizados.
+   *
+   *   Si matchedCount es 0, entonces significa que no existía documento y por ende se insertó uno nuevo.
+   */
+
+  // FIX:
   try {
-    /**
-     * REVIEW:
-     *   No necesitas contar los documentos antes,
-     *   para luego ver si el upsert actualizó o insertó.
-     *
-     *   Ver: https://docs.mongodb.com/manual/reference/method/db.collection.updateOne/
-     *   Ya el insertOne te devuelve esa info.
-     *   Por ejemplo, matchedCount te dice los documentos que coincidieron con el criterio
-     *   y por ende fueron actualizados.
-     *
-     *   Si matchedCount es 0, entonces significa que no existía documento y por ende se insertó uno nuevo.
-     */
-    docCountBefore = await db.collection("articles").countDocuments();
-    docCountBefore = parseInt(docCountBefore, 10);
-    await db.collection("articles").updateOne(
-      { _id: ObjectId(idParam) },
-      {
-        $set: reqBody,
-      },
-      {
-        upsert: true,
-      }
-    );
-    docCountAfter = await db.collection("articles").countDocuments();
-    docCountAfter = parseInt(docCountAfter, 10);
+    await db
+      .collection('articles')
+      .updateOne(
+        { _id: ObjectId(idParam) },
+        {
+          $set: reqBody,
+        },
+        {
+          upsert: true,
+        },
+      )
+      .then((result) => {
+        console.log(result.matchedCount);
+        console.log(result.upsertedId);
+        if (result.matchedCount == 0) {
+          Author.updateOne(
+            { _id: req.body.author },
+            { $addToSet: { articles: result.upsertedId._id } },
+          ).then(() => res.status(200).json({
+            message: `Document with id ${idParam} was successfully added`,
+          }));
+        } else {
+          return res.status(200).json({
+            message: `Document with id ${idParam} was successfully updated`,
+          });
+        }
+      });
+  } catch (error) {
+    console.log(error);
+    return res.status(404).json({
+      message: `Does not exist document with id ${idParam} or could not be upserted`,
+    });
+  }
+
+  // let docCountBefore = await db.collection("articles").countDocuments();
+  // let docCountBefore = parseInt(docCountBefore, 10);
+  // docCountAfter = await db.collection('articles').countDocuments();
+  // docCountAfter = parseInt(docCountAfter, 10);
+  /*
     if (docCountBefore < docCountAfter) {
-      idNew = await db
+      let idNew = await db
         .collection("articles")
         .find({}, { _id: 1 })
         .sort({ $natural: -1 })
@@ -196,20 +226,28 @@ articlesdb.put("/:id", auth, mValidation(aSchemaPatch), async (req, res) => {
         message: `Document with id ${idParam} was successfully updated`,
       });
     }
-  } catch (err) {
-    console.error(err);
-    return res.status(404).json({ message: `The id ${idParam} is not valid` });
-  }
+  */
 });
 
-articlesdb.delete("/:id", auth, async (req, res) => {
+articlesdb.delete('/:id', auth, async (req, res) => {
   const idParam = req.params.id;
   try {
     let authorId = await db
-      .collection("articles")
+      .collection('articles')
       .find({ _id: ObjectId(idParam) })
       .toArray();
     authorId = authorId[0].author;
+    // FIX: operaciones concurrentes
+    if (authorId == '') {
+      return res
+        .status(404)
+        .json({ message: `There is no document with id ${idParam}` });
+    }
+    await Promise.all([
+      db.collection('articles').deleteOne({ _id: ObjectId(idParam) }),
+
+      Author.updateOne({ _id: authorId }, { $pull: { articles: idParam } }),
+    ]).then(() => res.status(204).end());
 
     /**
      * REVIEW:
@@ -229,22 +267,8 @@ articlesdb.delete("/:id", auth, async (req, res) => {
      *    return res.status(204).end();
      *  });
      */
-
-    await db.collection("articles").deleteOne({ _id: ObjectId(idParam) });
-    Author.updateOne(
-      { _id: authorId },
-      {
-        $pull: { articles: idParam },
-      }
-    ).then(() => res.status(204).end());
-    // .catch((err) => {
-    //  console.log(err);
-    // });
   } catch (error) {
     console.error(error);
-    return res
-      .status(404)
-      .json({ message: `There is no document with id ${idParam}` });
   }
 });
 

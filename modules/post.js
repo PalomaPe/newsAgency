@@ -1,13 +1,13 @@
-const fs = require("fs");
-const util = require("util");
+const fs = require('fs');
+const util = require('util');
 
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
-const path = require("path");
+const path = require('path');
 
 async function appendToDB(article) {
   try {
-    const dbdir = path.join(path.dirname(__filename), "../db.json");
+    const dbdir = path.join(path.dirname(__filename), '../db.json');
     /**
      * REVIEW:
      *  Puedes anidar promesas para lograr "mejor claridad" del código.

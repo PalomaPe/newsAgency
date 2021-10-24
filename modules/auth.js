@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
    *  - 403 = Forbidden. Se conoce quien es pero no tiene acceso.
    */
   if (!req.headers.authorization) {
-    return res.status(403).json({ message: 'Not alowed' });
+    return res.status(401).json({ message: 'Not alowed' });
   }
   const token = req.headers.authorization.split(' ')[1];
 
@@ -20,13 +20,21 @@ module.exports = (req, res, next) => {
   // Luego el controller sabrá si llamar esta función para un POST o un GET, etc.
   // Pero no le corresponde a esta función hacer valdiación basado en el método HTTP,
   // solo en si está el header o no presente.
-  if (req.method === 'POST' && token > 0 && token < 11) {
+  if (
+    req.method === 'POST'
+    && Number.isInteger(token)
+    && token > 0
+    && token < 11
+  ) {
     return next();
   }
   const idParam = req.params.id;
-  const payload = btoa(idParam);
-  if (payload === token) {
-    return next();
+  if (idParam) {
+    const payload = btoa(idParam);
+    if (payload === token) {
+      return next();
+    }
+    return res.status(401).json({ message: 'Not alowed' });
   }
-  return res.status(403).json({ message: 'Not alowed' });
+  return res.status(401).json({ message: 'Not allowed' });
 };

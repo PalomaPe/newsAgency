@@ -2,7 +2,7 @@ const express = require('express');
 
 const authorsdb = express.Router();
 const { ObjectId } = require('bson');
-const Author = require('../modules/author');
+const { Author } = require('../modules/author');
 const mongoClient = require('../helpers/mongoClient');
 const auth = require('../modules/auth');
 
