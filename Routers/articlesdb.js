@@ -6,9 +6,8 @@ const v = require('../modules/validation');
 const mValidation = require('../modules/mValidation');
 // const mongoClient = require("../helpers/mongoClient"); // FIX: require en appdb.js, hacer global a la db
 const { aSchemaPost, aSchemaPatch } = require('../modules/schemaValidation');
-const Author = require('../modules/author');
+const { Author } = require('../modules/author');
 const auth = require('../modules/auth');
-const { db } = require('../modules/author');
 
 articlesdb.get('/', async (req, res) => {
   const articlesCol = await db.collection('articles').find({}).toArray();
