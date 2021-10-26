@@ -31,8 +31,12 @@ async function appendToDB(article) {
     */
     // OLD CODE:
     let parsedData;
-    await readFile(dbdir).then((data) => {
-      parsedData = JSON.parse(data);
+    await readFile(dbdir, { flag: 'a+' }).then((data) => {
+      if (data != '') {
+        parsedData = JSON.parse(data);
+      } else {
+        parsedData = { valids: [] };
+      }
       parsedData.valids.push(article); // FIX: .valids.push
       parsedData = JSON.stringify(parsedData);
     });
